@@ -13,6 +13,9 @@ interface ToggleOptions {
 	onToggle: Function
 }
 
+/**
+ * A class representing a toggle button.
+ */
 class Toggle {
 
 	public readonly button: HTMLElement | null = null
@@ -27,7 +30,16 @@ class Toggle {
 
 	private toggleSFX = "/fe/lol-parties/sfx-parties-button-toggle.ogg"
 
-	constructor({ parent, name, className, disabled = () => false, tooltip = "", onEnable = () => { }, onDisable = () => { }, onToggle = () => { } }) {
+	constructor({
+		parent,
+		name,
+		className,
+		disabled = () => false,
+		tooltip = "",
+		onEnable = () => { },
+		onDisable = () => { },
+		onToggle = () => { }
+	}: ToggleOptions) {
 
 		if (!parent)
 			throw new Error("Toggle: No parent specified")
@@ -52,6 +64,11 @@ class Toggle {
 		return this.button
 	}
 
+	/**
+	 * Initializes the toggle button and adds it to the parent element.
+	 * If the button already exists, the method returns early.
+	 * @returns {Promise<void>}
+	 */
 	async init() {
 		if (select(`#${this.name}`)) return
 
@@ -95,6 +112,11 @@ class Toggle {
 		})
 	}
 
+	/**
+	 * Creates a toggle button element with the given status.
+	 * @param status The initial status of the toggle button.
+	 * @returns The created toggle button element.
+	 */
 	createButton(status: boolean) {
 		const button = document.createElement("div")
 		button.id = this.name

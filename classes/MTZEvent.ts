@@ -1,3 +1,6 @@
+/**
+ * Represents an event that can be subscribed to with a callback function.
+ */
 class MTZEvent {
 	constructor(
 		public readonly event: string,
