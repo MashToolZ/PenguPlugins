@@ -220,4 +220,4 @@ class MTZ {
 	}
 }
 
-export default new MTZ(true)
+export default new MTZ(false)
