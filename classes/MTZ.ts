@@ -1,12 +1,6 @@
 import MTZEvent from "./MTZEvent"
 import MTZPlugin from "./MTZPlugin"
-import { subscribe, waitUntil } from "./Utils"
-
-
-/**
- * Represents the type of audio channel
- */
-type AudioChannel = "music" | "voice" | "sfx"
+import { AudioChannel } from "./Types"
 
 /**
  * The MTZ class is the main class for the PenguPlugins library.
