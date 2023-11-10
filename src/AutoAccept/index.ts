@@ -31,7 +31,7 @@ new class extends MTZPlugin {
 		this.on("phase", this.onScreen.bind(this))
 	}
 
-	onScreen(screen: string) {
+	override onScreen(screen: string) {
 		switch (screen) {
 			case "PARTIES": {
 				waitUntil(() => select(this.options.parent), false, 1000)
@@ -45,7 +45,7 @@ new class extends MTZPlugin {
 		}
 	}
 
-	onPhase(phase: string, lastPhase: string) {
+	override onPhase(phase: string, lastPhase: string) {
 		switch (phase) {
 
 			case "LOBBY":
