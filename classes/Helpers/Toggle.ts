@@ -1,8 +1,8 @@
 import MTZ from "../MTZ"
-import Tooltip from "./Tooltip"
+import { Tooltip } from "./Tooltip"
 import { select, sleep } from "../Utils"
 
-interface ToggleOptions {
+export interface ToggleOptions {
 	parent: string
 	name: string
 	className: string
@@ -16,7 +16,7 @@ interface ToggleOptions {
 /**
  * A class representing a toggle button.
  */
-class Toggle {
+export class Toggle {
 
 	public readonly button: HTMLElement | null = null
 	private readonly parent: string
@@ -142,5 +142,3 @@ class Toggle {
 		return button
 	}
 }
-
-export { Toggle, ToggleOptions }

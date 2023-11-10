@@ -1,4 +1,4 @@
-export default class Tooltip {
+export class Tooltip {
 
 	public readonly timeout = null
 
