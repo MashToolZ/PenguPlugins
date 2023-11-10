@@ -35,6 +35,6 @@
 	"include": [
 		"src/**/*.ts",
 		"src/**/*.d.ts",
-		"classes/**/*.ts"
-, "unfinished/Helpers/Dropdown.ts"	]
-}
+		"classes/**/*.ts"]
+	}
+
