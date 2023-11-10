@@ -21,7 +21,7 @@ class MTZ {
 	/**
 	 * Initializes the `MTZ` instance
 	 */
-	constructor(public readonly logging: boolean = false) {
+	constructor(private readonly logging: boolean = false) {
 
 		// Prevent creating multiple MTZ instances if one has already been created
 		if (window.MTZ)
@@ -45,7 +45,7 @@ class MTZ {
 	 * Checks if the document, WebSocket plugin, and audio object are all available.
 	 * @returns {boolean} - Returns true if all three are available, otherwise returns false.
 	 */
-	isReady() {
+	private isReady() {
 		return document.readyState === "complete"
 			&& document.querySelector('link[rel="riot:plugins:websocket"]')
 			&& this.#audio !== null
@@ -55,7 +55,7 @@ class MTZ {
 	 * Logs a message to the console.
 	 * @param args The message to log.
 	 */
-	log() {
+	private log() {
 		var [text, style] = arguments[0].includes("%c") ? [...arguments] : [arguments[0], ""]
 		console.info(`%c MTZ %c ${text}`, "background: #171717; color: #ff4800; font-weight: bold", "", style)
 	}
@@ -87,7 +87,7 @@ class MTZ {
 	 * Returns the current screen in the format of `MAIN/SUB` if both are available, otherwise just `MAIN`
 	 * @returns {string}
 	 */
-	get screen() {
+	private get screen() {
 		if (!document.body || document.querySelector(".lol-loading-screen-container"))
 			return "LOADING"
 
@@ -124,7 +124,7 @@ class MTZ {
 	 * Removes the plugin from the list of plugins
 	 * @param plugin - The plugin to remove.
 	 */
-	removePlugin(plugin: MTZPlugin) {
+	private removePlugin(plugin: MTZPlugin) {
 		this.plugins.splice(this.plugins.indexOf(plugin), 1)
 	}
 
@@ -180,7 +180,7 @@ class MTZ {
 	 * @param args - The arguments to pass to the event listeners.
 	 * @returns The modified arguments after all event listeners have been called.
 	 */
-	emit(event: string, ...args: any[]) {
+	private emit(event: string, ...args: any[]) {
 		if (!this.#events[event]) return false
 		this.#events[event].sort((a, b) => b.priority - a.priority)
 		this.#events[event].forEach(listener => {
