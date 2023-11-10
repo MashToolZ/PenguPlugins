@@ -1,3 +1,7 @@
+/**
+ * ChampionList is an array of objects containing the name and ID of each champion in the game.
+ * The ID corresponds to the unique identifier of each champion in the game's API.
+ */
 export const ChampionList = [
 	{
 		"name": "Annie",
