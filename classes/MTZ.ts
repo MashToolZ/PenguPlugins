@@ -237,17 +237,12 @@ class MTZ {
 		this.contextMenu.menu = contextMenu ?? null
 		this.contextMenu.optionsHolder = contextMenu?.shadowRoot?.querySelector("div.context-menu.context-menu-root") as HTMLElement ?? null
 		const options = this.contextMenu.optionsHolder ? [...this.contextMenu.optionsHolder?.children].map((element: HTMLElement) => element.textContent) : [] as string[]
-		switch (true) {
-			case options.includes("Unfriend"): {
-				this.contextMenu.type = "Friend"
-				break
-			}
 
-			case options.includes("Delete Folder"): {
-				this.contextMenu.type = "Folder"
-				break
-			}
-		}
+		if (this.contextMenu.target.closest("lol-social-roster-group"))
+			this.contextMenu.type = "Folder"
+
+		if (this.contextMenu.target.closest("lol-social-roster-member"))
+			this.contextMenu.type = "Friend"
 
 		if (this.logging)
 			this.log(`%cContextMenu: ${this.contextMenu.open ? "Opened" : "Closed"} (${this.contextMenu.type})`, "color: #4ac")
@@ -260,4 +255,4 @@ class MTZ {
 	}
 }
 
-export default new MTZ(true)
+export default new MTZ(false)

@@ -14,14 +14,15 @@ new class extends MTZPlugin {
 	}
 
 	update() {
-		const customizer = select(".challenges-identity-customizer-container")
-		if (!customizer) return
+		const customizerTabs = select(".challenges-identity-customizer-tab")
+		if (!customizerTabs) return
 
 		const selectedTab = select(".customizer-nav-item-container > lol-uikit-navigation-item[active]")
 		if (!selectedTab) return
 
-		switch (selectedTab.innerText) {
-			case "ICONS": {
+		const tabIndex = [...customizerTabs.children].indexOf(selectedTab.parentNode)
+		switch (tabIndex) {
+			case 0: {
 				const button = select("#random-icon-button")
 				if (button) return
 
