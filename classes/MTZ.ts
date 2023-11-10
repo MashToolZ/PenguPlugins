@@ -2,6 +2,7 @@ import MTZEvent from "./MTZEvent"
 import MTZPlugin from "./MTZPlugin"
 import { select, subscribe, waitUntil } from "./Utils"
 import { AudioChannel } from "./Types"
+import { ContextMenu } from "./Helpers/ContextMenu"
 
 /**
  * The MTZ class is the main class for the PenguPlugins library.
@@ -11,6 +12,7 @@ class MTZ {
 
 	private plugins: MTZPlugin[] = []
 	private phase: string = null
+	private contextMenu = new ContextMenu()
 
 	#events: { [key: string]: MTZEvent[] } = {}
 	#audio = null
@@ -38,6 +40,7 @@ class MTZ {
 		waitUntil(() => this.isReady(), () => {
 			this.log(`Initialized`)
 			subscribe("/lol-gameflow/v1/gameflow-phase", "phase", (message) => this.phase = JSON.parse(message.data)[2]?.data?.toUpperCase() || null)
+			document.addEventListener("contextmenu", event => this.contextMenu.target = event.target, true)
 			this.#update()
 		})
 	}
@@ -77,6 +80,16 @@ class MTZ {
 		if (this.#data.lastPhase !== this.phase) {
 			this.emit("phase", this.phase, this.#data.lastPhase)
 			this.#data.lastPhase = this.phase
+		}
+
+		const contextMenu = select("lol-uikit-context-menu") as HTMLElement
+		if (!contextMenu && this.contextMenu.open) {
+			this.contextMenu.open = false
+			this.#onContextMenu(null)
+		}
+		else if (contextMenu && !this.contextMenu.open) {
+			this.contextMenu.open = true
+			this.#onContextMenu(contextMenu)
 		}
 
 		this.plugins.forEach(plugin => plugin.update && plugin.update())
@@ -197,10 +210,9 @@ class MTZ {
 	 * @param lastScreen - The last screen.
 	 */
 	#onScreen(screen: string, lastScreen: string) {
-		this.plugins.forEach(plugin => plugin.onScreen && plugin.onScreen(screen, lastScreen))
-
 		if (this.logging)
 			this.log(`%cScreen: ${screen}`, "color: #ac4")
+		this.plugins.forEach(plugin => plugin.onScreen && plugin.onScreen(screen, lastScreen))
 	}
 
 	/**
@@ -209,10 +221,43 @@ class MTZ {
 	 * @param lastPhase - The previous phase.
 	 */
 	#onPhase(phase: string, lastPhase: string) {
-		this.plugins.forEach(plugin => plugin.onPhase && plugin.onPhase(phase, lastPhase))
 		if (this.logging)
 			this.log(`%cPhase: ${phase}`, "color: #ca4")
+		this.plugins.forEach(plugin => plugin.onPhase && plugin.onPhase(phase, lastPhase))
+	}
+
+	/**
+	 * Handles the context menu event.
+	 * @param open - A boolean indicating whether the context menu is open or not.
+	 * @param contextMenu - The HTML element representing the context menu.
+	 * @param target - The HTML element that triggered the context menu event.
+	 */
+	#onContextMenu(contextMenu: HTMLElement) {
+
+		this.contextMenu.menu = contextMenu ?? null
+		this.contextMenu.optionsHolder = contextMenu?.shadowRoot?.querySelector("div.context-menu.context-menu-root") as HTMLElement ?? null
+		const options = this.contextMenu.optionsHolder ? [...this.contextMenu.optionsHolder?.children].map((element: HTMLElement) => element.textContent) : [] as string[]
+		switch (true) {
+			case options.includes("Unfriend"): {
+				this.contextMenu.type = "Friend"
+				break
+			}
+
+			case options.includes("Delete Folder"): {
+				this.contextMenu.type = "Folder"
+				break
+			}
+		}
+
+		if (this.logging)
+			this.log(`%cContextMenu: ${this.contextMenu.open ? "Opened" : "Closed"} (${this.contextMenu.type})`, "color: #4ac")
+		this.plugins.forEach(plugin => plugin.onContextMenu && plugin.onContextMenu(this.contextMenu))
+
+		if (!options.length) {
+			this.contextMenu.type = null
+			this.contextMenu.target = null
+		}
 	}
 }
 
-export default new MTZ(false)
+export default new MTZ(true)

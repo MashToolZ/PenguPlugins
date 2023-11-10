@@ -1,5 +1,7 @@
 import MTZ from "./MTZ"
 import { addCSS, subscribe, waitUntil } from "./Utils"
+import { ContextMenuType } from "./Types"
+import type { ContextMenu } from "./Helpers/ContextMenu"
 
 /**
  * Represents a plugin for the MTZ framework.
@@ -57,7 +59,6 @@ class MTZPlugin {
 		return MTZ.once(event, callback)
 	}
 
-
 	/**
 	 * Emits an event with the given name and arguments.
 	 * @param event - The name of the event to emit.
@@ -81,6 +82,12 @@ class MTZPlugin {
 	 * @param lastPhase - The previous phase.
 	 */
 	onPhase(phase: string, lastPhase: string) { }
+
+	/**
+	 * Handles the context menu event.
+	 * @param contextMenu The context menu object.
+	 */
+	onContextMenu(contextMenu: ContextMenu) { }
 }
 
 export default MTZPlugin
