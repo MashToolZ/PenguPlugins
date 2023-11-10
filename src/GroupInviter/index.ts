@@ -11,7 +11,7 @@ interface Group {
 interface Friend {
 	availability: string
 	displayGroupId: number
-	summonerId: 2554274956134144
+	summonerId: number
 }
 
 new class extends MTZPlugin {
