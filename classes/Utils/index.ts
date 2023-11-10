@@ -1,6 +1,7 @@
 export * from "./Subscription"
 export * from "./FetchJSON"
 export * from "./Kyasshu"
+export * from "./ChampionList"
 
 function select(selector: string): HTMLElement {
 	return document.querySelector(selector)
@@ -21,8 +22,8 @@ function waitUntil(condition = () => true, callback = false, timeout = 1000): Pr
 
 			if (condition()) {
 				clearInterval(interval)
-				if (callback) resolve(callback())
-				else resolve()
+				if (callback) resolve(callback(condition()))
+				else resolve(condition())
 			}
 
 			timeout -= 10
