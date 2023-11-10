@@ -44,19 +44,19 @@ class MTZPlugin {
 	 * @param priority - (Optional) The priority of the listener. Listeners with higher priority will be called first.
 	 * @returns A function that removes the listener when called.
 	 */
-	on(event: string, callback: Function) {
-		return MTZ.on(event, callback)
+	on(event: string, callback: Function, priority?: number): Function {
+		return MTZ.on(event, callback, priority)
 	}
 
 	/**
 	 * Adds a one-time listener function for the event named `event`.
 	 * The next time `event` is triggered, this listener is removed and then invoked.
-	 * @param event - A string representing the event type to listen for.
-	 * @param callback - A function to be called when the event is triggered.
+	 * @param event - The name of the event to listen for.
+	 * @param callback - The function to be called when the event is emitted.
 	 * @param priority - An optional parameter that specifies the priority of the event listener.
 	 */
-	once(event: string, callback: Function) {
-		return MTZ.once(event, callback)
+	once(event: string, callback: Function, priority?: number): void {
+		MTZ.once(event, callback, priority)
 	}
 
 	/**

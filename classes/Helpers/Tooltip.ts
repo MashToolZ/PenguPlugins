@@ -8,8 +8,8 @@ export class Tooltip {
 		public readonly tooltipHolder: HTMLElement,
 		public readonly text: String,
 		public readonly fading: Boolean = false,
-		public readonly ms: Number = 200,
-		public readonly delay: Number = 200
+		public readonly ms: number = 200,
+		public readonly delay: number = 200
 	) {
 
 		const tooltip = document.createElement("div")

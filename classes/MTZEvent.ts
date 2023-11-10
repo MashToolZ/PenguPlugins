@@ -5,7 +5,7 @@ class MTZEvent {
 	constructor(
 		public readonly event: string,
 		public readonly callback: Function,
-		public readonly priority: Number
+		public readonly priority: number
 	) { }
 }
 
