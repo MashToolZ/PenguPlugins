@@ -21,11 +21,11 @@ new class extends MTZPlugin {
 		const hideButton = document.createElement("span")
 		hideButton.className = "action-bar-button hide-button"
 		hideButton.addEventListener("click", function () {
-			DataStore.set("socialVisibility", this.classList.toggle("toggled") ? "hidden" : "visible")
+			DataStore.set("MTZ.hideFriends", this.classList.toggle("toggled") ? "hidden" : "visible")
 			select("lol-social-roster.roster.social-ember-fade-in").style.visibility = this.classList.contains("toggled") ? "hidden" : "visible"
 		})
 
-		DataStore.get("socialVisibility") === "hidden" && hideButton.click()
+		DataStore.get("MTZ.hideFriends") === "hidden" && hideButton.click()
 
 		socialBar.querySelector(".action-bar-button.ember-view")?.insertAdjacentElement("afterend", hideButton)
 
