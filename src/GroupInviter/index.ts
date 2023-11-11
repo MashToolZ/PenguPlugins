@@ -1,9 +1,8 @@
-import MTZ from "../../classes/MTZ"
-import MTZPlugin from "../../classes/MTZPlugin"
-import Tooltip from "../../classes/Helpers/Tooltip"
-import { FetchJSON, select, waitUntil } from "../../classes/Utils"
-import { Friend, Group } from "../../classes/Types"
-import type { ContextMenu } from "../../classes/Helpers/ContextMenu"
+import { MTZ, MTZPlugin } from "@Classes"
+import { Tooltip } from "@Helpers"
+import type { ContextMenu } from "@Helpers"
+import { FetchJSON, select, waitUntil } from "@Utils"
+import { Friend, Group } from "@Types"
 
 new class extends MTZPlugin {
 

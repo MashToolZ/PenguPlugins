@@ -1,6 +1,6 @@
-import MTZ from "../MTZ"
-import { Tooltip } from "./Tooltip"
-import { select, sleep } from "../Utils"
+import { MTZ } from "@Classes"
+import { Tooltip } from "@Helpers"
+import { select, sleep } from "@Utils"
 
 export interface ToggleOptions {
 	parent: string

@@ -1,4 +1,4 @@
-import MTZPlugin from "../../classes/MTZPlugin.js"
+import { MTZPlugin } from "@Classes"
 
 new class extends MTZPlugin {
 

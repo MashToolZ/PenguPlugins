@@ -1,6 +1,6 @@
-import MTZPlugin from "../../classes/MTZPlugin"
-import { Toggle, ToggleOptions } from "../../classes/Helpers/Toggle"
-import { select, subscribe, unsubscribe, waitUntil, sleep } from "../../classes/Utils"
+import { MTZPlugin } from "@Classes"
+import { Toggle, ToggleOptions } from "@Helpers"
+import { select, subscribe, unsubscribe, waitUntil, sleep } from "@Utils"
 
 new class extends MTZPlugin {
 

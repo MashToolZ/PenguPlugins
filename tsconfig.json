@@ -29,12 +29,18 @@
 		"allowUnusedLabels": true,
 		"exactOptionalPropertyTypes": false,
 		"noImplicitOverride": true,
-		"typeRoots": ["./classes/types"]
-		
+		"baseUrl": "./",
+		"paths": {
+			"@Types": ["./classes/Types.ts"],
+			"@Classes": ["./classes"],
+			"@Helpers": ["./classes/Helpers"],
+			"@Utils": ["./classes/Utils"]
+		}
 	},
 	"include": [
 		"src/**/*.ts",
 		"src/**/*.d.ts",
-		"classes/**/*.ts"]
-	}
-
+		"classes/**/*.ts",
+		"classes/**/*.d.ts"
+	]
+}

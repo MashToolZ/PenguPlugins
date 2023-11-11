@@ -1,8 +1,7 @@
-import MTZEvent from "./MTZEvent"
-import MTZPlugin from "./MTZPlugin"
-import { select, subscribe, waitUntil } from "./Utils"
-import { AudioChannel } from "./Types"
-import { ContextMenu } from "./Helpers/ContextMenu"
+import { MTZEvent, MTZPlugin } from "@Classes"
+import { select, subscribe, waitUntil } from "@Utils"
+import { AudioChannel } from "@Types"
+import { ContextMenu } from "@Helpers"
 
 /**
  * The MTZ class is the main class for the PenguPlugins library.
@@ -255,4 +254,5 @@ class MTZ {
 	}
 }
 
-export default new MTZ(false)
+const instance = new MTZ(true)
+export { instance as MTZ }

@@ -1,6 +1,6 @@
-import MTZPlugin from "../../classes/MTZPlugin"
-import { Tooltip } from "../../classes/Helpers/Tooltip"
-import { select, waitUntil } from "../../classes/Utils"
+import { MTZPlugin } from "@Classes"
+import { Tooltip } from "@Helpers"
+import { select, waitUntil } from "@Utils"
 
 new class extends MTZPlugin {
 

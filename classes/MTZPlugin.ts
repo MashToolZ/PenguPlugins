@@ -1,12 +1,12 @@
-import MTZ from "./MTZ"
-import { addCSS, subscribe, waitUntil } from "./Utils"
-import { ContextMenuType } from "./Types"
-import type { ContextMenu } from "./Helpers/ContextMenu"
+import { MTZ } from "@Classes"
+import { addCSS, subscribe, waitUntil } from "@Utils"
+import { ContextMenuType } from "@Types"
+import type { ContextMenu } from "@Helpers"
 
 /**
  * Represents a plugin for the MTZ framework.
  */
-class MTZPlugin {
+export class MTZPlugin {
 
 	/**
 	 * Represents a plugin for the MTZ framework.
@@ -89,5 +89,3 @@ class MTZPlugin {
 	 */
 	onContextMenu(contextMenu: ContextMenu) { }
 }
-
-export default MTZPlugin

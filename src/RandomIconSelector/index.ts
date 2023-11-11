@@ -1,6 +1,5 @@
-import MTZ from "../../classes/MTZ"
-import MTZPlugin from "../../classes/MTZPlugin"
-import { select, waitUntil, sleep, FetchJSON } from "../../classes/Utils"
+import { MTZ, MTZPlugin } from "@Classes"
+import { select, waitUntil, sleep, FetchJSON } from "@Utils"
 
 new class extends MTZPlugin {
 

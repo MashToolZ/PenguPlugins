@@ -1,4 +1,4 @@
-import { waitUntil } from "./waitUntil"
+import { waitUntil } from "@Utils"
 
 /**
  * Adds a CSS file or style to the document body.

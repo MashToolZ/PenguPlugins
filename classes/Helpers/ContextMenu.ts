@@ -1,4 +1,4 @@
-import { ContextMenuType } from "../Types"
+import { ContextMenuType } from "@Types"
 
 interface ContextMenuOption {
 	type: ContextMenuType
