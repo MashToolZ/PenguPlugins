@@ -33,7 +33,7 @@ export class MTZPlugin {
 	 * @param url - The URL of the CSS file to add.
 	 * @returns A Promise that resolves when the CSS file has been added.
 	 */
-	async addCSS(url: string) {
+	addCSS(url: string) {
 		return addCSS(url)
 	}
 
