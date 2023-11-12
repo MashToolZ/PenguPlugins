@@ -1,3 +1,11 @@
+/**
+ * Represents an event that can be subscribed to with a callback function.
+ */
+export interface MTZEvent {
+	event: string,
+	callback: Function,
+	priority: number
+}
 
 /**
  * Represents a group with an id and a name.

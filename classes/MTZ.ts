@@ -1,6 +1,6 @@
-import { MTZEvent, MTZPlugin } from "@Classes"
+import { MTZPlugin } from "@Classes"
 import { select, subscribe, waitUntil } from "@Utils"
-import { AudioChannel } from "@Types"
+import { AudioChannel, MTZEvent } from "@Types"
 import { ContextMenu } from "@Helpers"
 
 /**
@@ -168,7 +168,7 @@ class MTZ {
 	on(event: string, callback: Function, priority: number = 0): Function {
 		if (!this.#events[event])
 			this.#events[event] = []
-		const listener = new MTZEvent(event, callback, priority)
+		const listener = { event, callback, priority } as MTZEvent
 		this.#events[event].push(listener)
 		return () => this.#events[event].splice(this.#events[event].indexOf(listener), 1)
 	}
@@ -254,5 +254,5 @@ class MTZ {
 	}
 }
 
-const instance = new MTZ(true)
+const instance = new MTZ(false)
 export { instance as MTZ }
