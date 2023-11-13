@@ -25,10 +25,6 @@ class MTZ {
 	 */
 	constructor(private readonly logging: boolean = false) {
 
-		// Prevent creating multiple MTZ instances if one has already been created
-		if (window.MTZ)
-			return window.MTZ
-
 		window.MTZ = this
 
 		this.on("screen", this.#onScreen.bind(this))
@@ -36,7 +32,7 @@ class MTZ {
 
 		rcp.postInit("rcp-fe-audio", (api) => this.#audio = api.channels)
 
-		waitUntil(() => this.isReady(), () => {
+		waitUntil(() => this.isReady()).then(() => {
 			this.log(`Initialized`)
 			subscribe("/lol-gameflow/v1/gameflow-phase", "phase", (message) => this.phase = JSON.parse(message.data)[2]?.data?.toUpperCase() || null)
 			document.addEventListener("contextmenu", event => this.contextMenu.target = event.target, true)
@@ -254,5 +250,5 @@ class MTZ {
 	}
 }
 
-const instance = new MTZ(false)
+const instance = window.MTZ || new MTZ(true)
 export { instance as MTZ }
