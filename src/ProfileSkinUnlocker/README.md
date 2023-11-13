@@ -1,5 +1,5 @@
 Allows you to select any profile background image
 
-![Preview](https://i.imgur.com/UIEmQoD.gif)
+<img src="../../previews/ProfileSkinUnlocker.gif?raw=true">
 
 [Download](<https://github.com/MashToolZ/PenguPlugins/releases/latest/download/ProfileSkinUnlocker.zip>)
