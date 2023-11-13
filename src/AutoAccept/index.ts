@@ -34,7 +34,7 @@ new class extends MTZPlugin {
 	override onScreen(screen: string) {
 		switch (screen) {
 			case "PARTIES": {
-				waitUntil(() => select(this.options.parent), false, 1000)
+				waitUntil(() => select(this.options.parent), 1000, false)
 					.then(() => {
 						if (!select(`#${this.options.name}`))
 							this.button = new Toggle(this.options)
