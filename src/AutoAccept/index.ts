@@ -26,9 +26,6 @@ new class extends MTZPlugin {
 		}
 
 		this.addCSS("https://cdn.mashtoolz.xyz/lolclient/css/AutoAccept.css")
-
-		this.on("screen", this.onScreen.bind(this))
-		this.on("phase", this.onScreen.bind(this))
 	}
 
 	override onScreen(screen: string) {
