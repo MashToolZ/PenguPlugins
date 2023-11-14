@@ -1,0 +1,34 @@
+name: Display Available Plugins
+
+on:
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: 'Manually trigger package publish'
+        required: true
+        default: 'true'
+
+jobs:
+  list-plugins:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: List Available Plugins
+        id: list-plugins
+        run: |
+          plugins=$(ls -d src/*/ | xargs -n 1 basename)
+          echo "::set-output name=available_plugins::$plugins"
+        shell: bash
+
+  display-dropdown:
+    needs: list-plugins
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Display Available Plugins
+        run: |
+          echo "Available Plugins: ${{ needs.list-plugins.outputs.available_plugins }}"
+        shell: bash
