@@ -1,0 +1,41 @@
+name: Publish Selected Plugins
+
+on:
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: 'Manually trigger package publish'
+        required: true
+        default: 'true'
+      plugins:
+        description: 'Comma-separated list of plugin names to publish'
+        required: true
+
+jobs:
+  publish-plugins:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '14'
+
+      - name: Install Dependencies
+        run: npm install -g pnpm
+
+      - name: Log in to npm
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+
+      - name: Publish Selected Plugins
+        run: |
+          IFS=',' read -ra plugins <<< "${{ github.event.inputs.plugins }}"
+          for pluginName in "${plugins[@]}"; do
+            echo "Publishing $pluginName..."
+            cd "dist/$pluginName"
+            pnpm publish --access private
+            cd ../../
+          done
