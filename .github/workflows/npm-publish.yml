@@ -33,8 +33,13 @@ jobs:
       - name: Build Plugins
         run: pnpm build
 
-      - name: Copy package.json to dist
-        run: cp src/*/package.json dist/
+      - name: Copy package.json files to dist
+        run: |
+          IFS=',' read -ra plugins <<< "${{ github.event.inputs.plugins }}"
+          for pluginName in "${plugins[@]}"; do
+            echo "Copying package.json for $pluginName..."
+            cp src/$pluginName/package.json dist/$pluginName/
+          done
         
       - name: Log in to npm
         run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
