@@ -261,5 +261,5 @@ class MTZ {
 	}
 }
 
-const instance = window.MTZ || new MTZ(true)
+const instance = window.MTZ || new MTZ(false)
 export { instance as MTZ }
