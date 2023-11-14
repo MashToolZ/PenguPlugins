@@ -1,5 +1,6 @@
 {
-	"name": "AutoAccept",
+	"displayName": "AutoAccept",
+	"name": "autoaccept",
 	"version": "1.0.0",
 	"author": "Sakurasou"
 }

@@ -16,9 +16,9 @@ export class MTZPlugin {
 	 * Creates a new instance of the MTZPlugin class.
 	 * @param pkg The package.json file of the plugin.
 	 */
-	constructor(pkg: Promise<{ name: string, version: string, author: string }>) {
-		pkg.then(({ name, version, author }) => {
-			this.name = name
+	constructor(pkg: Promise<{ displayName?: string, name: string, version: string, author: string }>) {
+		pkg.then(({ displayName, name, version, author }) => {
+			this.name = displayName ?? name
 			this.version = version
 			this.author = author
 			MTZ.addPlugin(this)

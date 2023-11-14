@@ -1,5 +1,6 @@
 {
-	"name": "RandomIconSelector",
+	"displayName": "RandomIconSelector",
+	"name": "randomiconselector",
 	"version": "1.0.0",
 	"author": "Sakurasou"
 }
