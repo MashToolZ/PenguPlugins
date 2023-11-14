@@ -1,6 +1,6 @@
 import { MTZPlugin } from "@Classes"
 import { Toggle, ToggleOptions } from "@Helpers"
-import { select, waitUntil } from "@Utils"
+import { FetchJSON, select, waitUntil } from "@Utils"
 
 new class extends MTZPlugin {
 
@@ -19,7 +19,18 @@ new class extends MTZPlugin {
 			tooltip: "Automatically honor a random teammate"
 		}
 
+		this.addCSS("https://cdn.mashtoolz.xyz/lolclient/css/sweetalert2.css")
 		this.addCSS("https://cdn.mashtoolz.xyz/lolclient/css/AutoHonor.css")
+		import("https://cdn.mashtoolz.xyz/lolclient/js/sweetalert2.js").then(() => {
+			window.Toast = Sweetalert2.mixin({
+				toast: true,
+				position: "top",
+				showConfirmButton: false,
+				timer: 2000,
+				timerProgressBar: true,
+				showCloseButton: true
+			})
+		})
 	}
 
 	override onScreen(screen: string) {
@@ -41,10 +52,46 @@ new class extends MTZPlugin {
 			case "PREENDOFGAME": {
 				if (!(DataStore.get(`MTZ.${this.name}`) || false)) return
 
-				waitUntil(() => {
-					const votes = [...document.querySelectorAll(".prompted-voting-honor-category-selector")]
-					return votes.length > 0 ? votes : null
-				}, 5000, (votes) => sleep(1000).then(() => votes[0 | Math.random() * votes.length].click()))
+				let hasVoted = false
+				const canVote = Symbol("canVote")
+				Reflect.defineProperty(Object.prototype, "canVote", {
+					configurable: true,
+					get() {
+						if (!hasVoted && this.eligiblePlayers?.length >= 1 && this.hasOwnProperty("gameId")) {
+
+							// This is just to prevent accidently honoring multiple people
+							hasVoted = true
+							Reflect.deleteProperty(Object.prototype, "canVote")
+
+							const { gameId, eligiblePlayers } = this
+							const { puuid, summonerId, summonerName } = eligiblePlayers[Math.random() * eligiblePlayers.length | 0]
+
+							Toast.fire({
+								icon: "success",
+								title: `Honored ${summonerName}`
+							})
+
+							FetchJSON("/lol-honor-v2/v1/honor-player", {
+								method: "POST",
+								headers: {
+									"Accept": "application/json",
+									"Content-Type": "application/json"
+								},
+								body: JSON.stringify({ gameId, puuid, summonerId, honorType: "HEART" })
+							})
+						}
+						return this[canVote]
+					},
+					set(value) {
+						this[canVote] = value
+					}
+				})
+				break
+			}
+
+			default: {
+				this.voted = false
+				Reflect.deleteProperty(Object.prototype, "canVote")
 				break
 			}
 		}
