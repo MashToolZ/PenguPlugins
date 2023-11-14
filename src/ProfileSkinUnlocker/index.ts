@@ -1,4 +1,5 @@
 import { MTZPlugin } from "@Classes"
+import { waitUntil } from "@Utils"
 
 new class extends MTZPlugin {
 
@@ -6,16 +7,26 @@ new class extends MTZPlugin {
 		super(import("./package.json"))
 	}
 
-	override init(): void {
-		Object.defineProperty(HTMLScriptElement.prototype, "src", {
-			get() {
-				return this.getAttribute("src")
-			},
-			set(value) {
-				if (value === "/fe/lol-skins-picker/rcp-fe-lol-skins-picker.js")
-					value = "https://cdn.mashtoolz.xyz/lolclient/js/rcp-fe-lol-skins-picker.js"
-				this.setAttribute("src", value)
+	override onScreen(screen: string, lastScreen: string): void {
+		switch (screen) {
+			case "PROFILE/OVERVIEW": {
+				const owned = Symbol("owned")
+				Reflect.defineProperty(Object.prototype, "owned", {
+					configurable: true,
+					get() {
+						return (this.hasOwnProperty("loyaltyReward") && this.hasOwnProperty("rental") && this.hasOwnProperty("xboxGPReward")) || this[owned]
+					},
+					set(value) {
+						this[owned] = value
+					}
+				})
+				break
 			}
-		})
+
+			default: {
+				Reflect.deleteProperty(Object.prototype, "owned")
+				break
+			}
+		}
 	}
 }
