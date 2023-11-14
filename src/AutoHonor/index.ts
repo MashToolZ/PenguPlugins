@@ -8,7 +8,7 @@ new class extends MTZPlugin {
 	private options: ToggleOptions
 
 	constructor() {
-		super("AutoHonor", "1.0.0", "Sakurasou")
+		super(import("./package.json"))
 
 		this.options = {
 			parent: ".open-party-toggle",

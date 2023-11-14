@@ -9,7 +9,7 @@ new class extends MTZPlugin {
 	private selectSFX = "/fe/lol-static-assets/sounds/sfx-summoner-icons-select.ogg"
 
 	constructor() {
-		super("RandomIconSelector", "1.0.0", "Sakurasou")
+		super(import("./package.json"))
 	}
 
 	update() {

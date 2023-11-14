@@ -5,7 +5,7 @@ import { select, waitUntil } from "@Utils"
 new class extends MTZPlugin {
 
 	constructor() {
-		super("HideFriends", "1.0.0", "Sakurasou")
+		super(import("./package.json"))
 
 		this.addCSS("https://cdn.mashtoolz.xyz/lolclient/css/HideFriends.css")
 	}

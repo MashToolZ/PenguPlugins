@@ -3,7 +3,7 @@ import { MTZPlugin } from "@Classes"
 new class extends MTZPlugin {
 
 	constructor() {
-		super("ProfileSkinUnlocker", "1.0.0", "Sakurasou")
+		super(import("./package.json"))
 
 		Object.defineProperty(HTMLScriptElement.prototype, "src", {
 			get() {

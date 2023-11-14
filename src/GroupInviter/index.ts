@@ -7,7 +7,7 @@ import { Friend, Group } from "@Types"
 new class extends MTZPlugin {
 
 	constructor() {
-		super("GroupInviter", "1.0.0", "Sakurasou")
+		super(import("./package.json"))
 	}
 
 	override onContextMenu(contextMenu: ContextMenu): void {

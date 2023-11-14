@@ -8,15 +8,21 @@ import type { ContextMenu } from "@Helpers"
  */
 export class MTZPlugin {
 
+	public readonly name: string
+	public readonly version: string
+	public readonly author: string
+
 	/**
-	 * Represents a plugin for the MTZ framework.
-	 * @constructor
-	 * @param {string} name - The name of the plugin.
-	 * @param {string} version - The version of the plugin.
-	 * @param {string} author - The author of the plugin.
+	 * Creates a new instance of the MTZPlugin class.
+	 * @param pkg The package.json file of the plugin.
 	 */
-	constructor(public readonly name, public readonly version, public readonly author) {
-		MTZ.addPlugin(this)
+	constructor(pkg: Promise<{ name: string, version: string, author: string }>) {
+		pkg.then(({ name, version, author }) => {
+			this.name = name
+			this.version = version
+			this.author = author
+			MTZ.addPlugin(this)
+		})
 	}
 
 	/**
