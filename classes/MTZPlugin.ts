@@ -26,6 +26,11 @@ export class MTZPlugin {
 	}
 
 	/**
+	 * Called when the plugin is initialized.
+	 */
+	init() { }
+
+	/**
 	 * Logs a message to the console.
 	 * @param args The message to log.
 	 */

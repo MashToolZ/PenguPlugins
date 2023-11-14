@@ -4,7 +4,9 @@ new class extends MTZPlugin {
 
 	constructor() {
 		super(import("./package.json"))
+	}
 
+	override init(): void {
 		Object.defineProperty(HTMLScriptElement.prototype, "src", {
 			get() {
 				return this.getAttribute("src")
