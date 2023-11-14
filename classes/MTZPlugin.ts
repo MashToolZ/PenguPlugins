@@ -12,6 +12,8 @@ export class MTZPlugin {
 	public readonly version: string
 	public readonly author: string
 
+	public readonly initialized: boolean = false
+
 	/**
 	 * Creates a new instance of the MTZPlugin class.
 	 * @param pkg The package.json file of the plugin.
@@ -21,7 +23,6 @@ export class MTZPlugin {
 			this.name = displayName ?? name
 			this.version = version
 			this.author = author
-			this.init()
 			MTZ.addPlugin(this)
 		})
 	}

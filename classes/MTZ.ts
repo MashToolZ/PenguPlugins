@@ -27,15 +27,26 @@ class MTZ {
 
 		window.MTZ = this
 
-		this.on("screen", this.#onScreen.bind(this))
-		this.on("phase", this.#onPhase.bind(this))
-
-		rcp.postInit("rcp-fe-audio", (api) => this.#audio = api.channels)
+		rcp.postInit("rcp-fe-audio", (api) => {
+			this.#audio = api.channels
+		})
 
 		waitUntil(() => this.isReady()).then(() => {
 			this.log(`Initialized`)
-			subscribe("/lol-gameflow/v1/gameflow-phase", "phase", (message) => this.phase = JSON.parse(message.data)[2]?.data?.toUpperCase() || null)
+
 			document.addEventListener("contextmenu", event => this.contextMenu.target = event.target, true)
+
+			subscribe("/lol-gameflow/v1/gameflow-phase", "phase", (message) => this.phase = JSON.parse(message.data)[2]?.data?.toUpperCase() || null)
+
+			this.plugins.forEach(plugin => {
+				plugin.initialized = true
+				plugin.init()
+				plugin.log("Initialized")
+			})
+
+			this.on("screen", this.#onScreen.bind(this))
+			this.on("phase", this.#onPhase.bind(this))
+
 			this.#update()
 		})
 	}
@@ -207,7 +218,7 @@ class MTZ {
 	#onScreen(screen: string, lastScreen: string) {
 		if (this.logging)
 			this.log(`%cScreen: ${screen}`, "color: #ac4")
-		this.plugins.forEach(plugin => plugin.onScreen && plugin.onScreen(screen, lastScreen))
+		this.plugins.forEach(plugin => plugin.initialized && plugin.onScreen && plugin.onScreen(screen, lastScreen))
 	}
 
 	/**
@@ -218,7 +229,7 @@ class MTZ {
 	#onPhase(phase: string, lastPhase: string) {
 		if (this.logging)
 			this.log(`%cPhase: ${phase}`, "color: #ca4")
-		this.plugins.forEach(plugin => plugin.onPhase && plugin.onPhase(phase, lastPhase))
+		this.plugins.forEach(plugin => plugin.initialized && plugin.onPhase && plugin.onPhase(phase, lastPhase))
 	}
 
 	/**
@@ -241,7 +252,7 @@ class MTZ {
 
 		if (this.logging)
 			this.log(`%cContextMenu: ${this.contextMenu.open ? "Opened" : "Closed"} (${this.contextMenu.type})`, "color: #4ac")
-		this.plugins.forEach(plugin => plugin.onContextMenu && plugin.onContextMenu(this.contextMenu))
+		this.plugins.forEach(plugin => plugin.initialized && plugin.onContextMenu && plugin.onContextMenu(this.contextMenu))
 
 		if (!options.length) {
 			this.contextMenu.type = null
@@ -250,5 +261,5 @@ class MTZ {
 	}
 }
 
-const instance = window.MTZ || new MTZ(false)
+const instance = window.MTZ || new MTZ(true)
 export { instance as MTZ }
