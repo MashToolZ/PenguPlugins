@@ -33,12 +33,13 @@ jobs:
       - name: Build Plugins
         run: pnpm build
 
-      - name: Copy package.json files to dist
+      - name: Copy package.json and README files to dist
         run: |
           IFS=',' read -ra plugins <<< "${{ github.event.inputs.plugins }}"
           for pluginName in "${plugins[@]}"; do
             echo "Copying package.json for $pluginName..."
             cp src/$pluginName/package.json dist/$pluginName/
+            cp src/$pluginName/README.md dist/$pluginName/
           done
         
       - name: Log in to npm
