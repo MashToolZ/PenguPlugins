@@ -8,7 +8,7 @@ on:
         required: true
         default: 'true'
       plugins:
-        description: 'Comma-separated list of plugin names to publish'
+        description: 'Plugin Names'
         required: true
 
 jobs:
@@ -22,10 +22,16 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '14'
+          node-version: '18.18.0'
 
-      - name: Install Dependencies
+      - name: Install pnpm
         run: npm install -g pnpm
+        
+      - name: Install Dependencies
+        run: pnpm install
+
+      - name: Build Plugins
+        run: pnpm build
 
       - name: Log in to npm
         run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
