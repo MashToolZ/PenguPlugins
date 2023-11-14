@@ -21,6 +21,7 @@ export class MTZPlugin {
 			this.name = displayName ?? name
 			this.version = version
 			this.author = author
+			this.init()
 			MTZ.addPlugin(this)
 		})
 	}
