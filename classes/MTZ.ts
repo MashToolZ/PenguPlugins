@@ -31,7 +31,7 @@ class MTZ {
 			this.#audio = api.channels
 		})
 
-		waitUntil(() => this.isReady()).then(() => {
+		waitUntil(() => this.isReady(), Infinity).then(() => {
 			this.log(`Initialized`)
 
 			document.addEventListener("contextmenu", event => this.contextMenu.target = event.target, true)
