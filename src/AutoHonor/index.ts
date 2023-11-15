@@ -56,15 +56,20 @@ new class extends MTZPlugin {
 				const canVote = Symbol("canVote")
 				Reflect.defineProperty(Object.prototype, "canVote", {
 					configurable: true,
-					get() {
-						if (!hasVoted && this.eligiblePlayers?.length >= 1 && this.hasOwnProperty("gameId")) {
+					async get() {
+						if (!hasVoted && this.hasOwnProperty("eligiblePlayers") && this.hasOwnProperty("gameId")) {
 
-							// This is just to prevent accidently honoring multiple people
 							hasVoted = true
 							Reflect.deleteProperty(Object.prototype, "canVote")
 
-							const { gameId, eligiblePlayers } = this
-							const { puuid, summonerId, summonerName } = eligiblePlayers[Math.random() * eligiblePlayers.length | 0]
+							const { eligiblePlayers } = await FetchJSON("/lol-honor-v2/v1/ballot")
+							const party = await FetchJSON("/lol-lobby/v2/comms/members")
+
+							const puuids = eligiblePlayers.map(e => e.puuid)
+							const partyPuuids = Object.values(party.players).map(p => p.puuid).filter(puuid => puuids.includes(puuid))
+
+							const players = partyPuuids.length > 0 ? eligiblePlayers.filter(e => partyPuuids.includes(e.puuid)) : eligiblePlayers
+							const { puuid, summonerId, summonerName } = players[Math.random() * players.length | 0]
 
 							Toast.fire({
 								icon: "success",
@@ -77,7 +82,7 @@ new class extends MTZPlugin {
 									"Accept": "application/json",
 									"Content-Type": "application/json"
 								},
-								body: JSON.stringify({ gameId, puuid, summonerId, honorType: "HEART" })
+								body: JSON.stringify({ gameId: this.gameId, puuid, summonerId, honorType: "HEART" })
 							})
 						}
 						return this[canVote]
