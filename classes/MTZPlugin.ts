@@ -11,6 +11,7 @@ export class MTZPlugin {
 	public readonly name: string
 	public readonly version: string
 	public readonly author: string
+	public readonly priority: number = 0
 
 	public readonly initialized: boolean = false
 
@@ -18,11 +19,12 @@ export class MTZPlugin {
 	 * Creates a new instance of the MTZPlugin class.
 	 * @param pkg The package.json file of the plugin.
 	 */
-	constructor(pkg: Promise<{ displayName?: string, name: string, version: string, author: string }>) {
-		pkg.then(({ displayName, name, version, author }) => {
+	constructor(pkg: Promise<{ displayName?: string, name: string, priority?: number, version: string, author: string }>) {
+		pkg.then(({ displayName, name, priority, version, author }) => {
 			this.name = displayName ?? name
 			this.version = version
 			this.author = author
+			this.priority = priority ?? 0
 			MTZ.addPlugin(this)
 		})
 	}

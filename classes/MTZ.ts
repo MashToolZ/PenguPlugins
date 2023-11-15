@@ -38,16 +38,61 @@ class MTZ {
 
 			subscribe("/lol-gameflow/v1/gameflow-phase", "phase", (message) => this.phase = JSON.parse(message.data)[2]?.data?.toUpperCase() || null)
 
-			this.plugins.forEach(plugin => {
-				plugin.initialized = true
-				plugin.init()
-				plugin.log("Initialized")
-			})
+			this.getPlugins().forEach(plugin => this.initPlugin(plugin))
 
 			this.on("screen", this.#onScreen.bind(this))
 			this.on("phase", this.#onPhase.bind(this))
 
 			this.#update()
+		})
+	}
+
+	/**
+	 * Initializes the MTZ plugin.
+	 * @param plugin - The plugin to initialize.
+	 */
+	initPlugin(plugin: MTZPlugin) {
+		plugin.initialized = true
+		plugin.init()
+		plugin.log("Initialized")
+	}
+
+	/**
+	 * Adds a plugin to the list of plugins
+	 * @param plugin - The plugin to add.
+	 */
+	addPlugin(plugin: MTZPlugin) {
+		this.plugins.push(plugin)
+		if (this.isReady())
+			this.initPlugin(plugin)
+	}
+
+	/**
+	 * Removes the plugin from the list of plugins
+	 * @param plugin - The plugin to remove.
+	 */
+	private removePlugin(plugin: MTZPlugin) {
+		this.plugins.splice(this.plugins.indexOf(plugin), 1)
+	}
+
+	/**
+	 * Returns the plugin with the specified name.
+	 * @param name - The name of the plugin to retrieve.
+	 * @returns The plugin with the specified name, or undefined if no such plugin exists.
+	 */
+	getPlugin(name: string) {
+		return this.plugins.find(plugin => plugin.name === name)
+	}
+
+	/**
+	 * Returns an array of plugins.
+	 * @returns {Array} An array of plugins.
+	 */
+	getPlugins() {
+		return this.plugins.sort((a, b) => {
+			if (a.priority === b.priority)
+				return a.name.localeCompare(b.name)
+			return b.priority - a.priority
 		})
 	}
 
@@ -130,39 +175,6 @@ class MTZ {
 	 */
 	playSound(sound: string, channel: AudioChannel) {
 		this.#audio.get(channel).playSound(sound)
-	}
-
-	/**
-	 * Adds a plugin to the list of plugins
-	 * @param plugin - The plugin to add.
-	 */
-	addPlugin(plugin: MTZPlugin) {
-		this.plugins.push(plugin)
-	}
-
-	/**
-	 * Removes the plugin from the list of plugins
-	 * @param plugin - The plugin to remove.
-	 */
-	private removePlugin(plugin: MTZPlugin) {
-		this.plugins.splice(this.plugins.indexOf(plugin), 1)
-	}
-
-	/**
-	 * Returns the plugin with the specified name.
-	 * @param name - The name of the plugin to retrieve.
-	 * @returns The plugin with the specified name, or undefined if no such plugin exists.
-	 */
-	getPlugin(name: string) {
-		return this.plugins.find(plugin => plugin.name === name)
-	}
-
-	/**
-	 * Returns an array of plugins.
-	 * @returns {Array} An array of plugins.
-	 */
-	getPlugins() {
-		return this.plugins
 	}
 
 	/**
