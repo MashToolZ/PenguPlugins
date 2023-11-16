@@ -157,15 +157,9 @@ class MTZ {
 			return "LOADING"
 
 		let main = document.querySelector(`.main-navigation-menu-item[active]`)
-		let sub = document.querySelector("lol-uikit-navigation-item[active]")
-
 		main = main ? main.offsetParent ? main.classList[1].split("_")[3].toUpperCase() : null : document.querySelector("section.rcp-fe-viewport-main > div.screen-root")?.getAttribute("data-screen-name")?.split("rcp-fe-lol-")[1]?.toUpperCase() ?? null
-		sub = sub && sub.offsetParent ? sub.innerText.toUpperCase() : null
 
-		if (!main && !sub)
-			return "UNKNOWN"
-
-		return `${main}${sub ? `/${sub}` : ""}`
+		return main ?? "UNKNOWN"
 	}
 
 	/**
@@ -254,7 +248,7 @@ class MTZ {
 
 		this.contextMenu.menu = contextMenu ?? null
 		this.contextMenu.optionsHolder = contextMenu?.shadowRoot?.querySelector("div.context-menu.context-menu-root") as HTMLElement ?? null
-		const options = this.contextMenu.optionsHolder ? [...this.contextMenu.optionsHolder?.children].map((element: HTMLElement) => element.textContent) : [] as string[]
+		const options = this.contextMenu.optionsHolder ? [...this.contextMenu.optionsHolder?.children] : [] as string[]
 
 		if (this.contextMenu.target.closest("lol-social-roster-group"))
 			this.contextMenu.type = "Folder"
