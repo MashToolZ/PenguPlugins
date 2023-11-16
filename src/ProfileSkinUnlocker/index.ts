@@ -9,7 +9,7 @@ new class extends MTZPlugin {
 
 	override onScreen(screen: string, lastScreen: string): void {
 		switch (screen) {
-			case "PROFILE/OVERVIEW": {
+			case "PROFILE": {
 				const owned = Symbol("owned")
 				Reflect.defineProperty(Object.prototype, "owned", {
 					configurable: true,
