@@ -1,4 +1,4 @@
-import { MTZPlugin } from "@Classes"
+import { MTZ, MTZPlugin } from "@Classes"
 import { Toggle, ToggleOptions } from "@Helpers"
 import { FetchJSON, select, waitUntil } from "@Utils"
 
@@ -21,16 +21,6 @@ new class extends MTZPlugin {
 
 		this.addCSS("https://cdn.mashtoolz.xyz/lolclient/css/sweetalert2.css")
 		this.addCSS("https://cdn.mashtoolz.xyz/lolclient/css/AutoHonor.css")
-		import("https://cdn.mashtoolz.xyz/lolclient/js/sweetalert2.js").then(() => {
-			window.Toast = Sweetalert2.mixin({
-				toast: true,
-				position: "top",
-				showConfirmButton: false,
-				timer: 2000,
-				timerProgressBar: true,
-				showCloseButton: true
-			})
-		})
 	}
 
 	override onScreen(screen: string) {
@@ -71,7 +61,7 @@ new class extends MTZPlugin {
 							const players = partyPuuids.length > 0 ? eligiblePlayers.filter(e => partyPuuids.includes(e.puuid)) : eligiblePlayers
 							const { puuid, summonerId, summonerName } = players[Math.random() * players.length | 0]
 
-							Toast.fire({
+							MTZ.Toast({
 								icon: "success",
 								title: `Honored ${summonerName}`
 							})
