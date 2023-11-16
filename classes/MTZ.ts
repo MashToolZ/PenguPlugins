@@ -12,6 +12,7 @@ class MTZ {
 	private plugins: MTZPlugin[] = []
 	private phase: string = null
 	private contextMenu = new ContextMenu()
+	private #Toast: Function
 
 	#events: { [key: string]: MTZEvent[] } = {}
 	#audio = null
@@ -27,8 +28,17 @@ class MTZ {
 
 		window.MTZ = this
 
-		rcp.postInit("rcp-fe-audio", (api) => {
-			this.#audio = api.channels
+		rcp.postInit("rcp-fe-audio", (api) => this.#audio = api.channels)
+
+		import("https://cdn.mashtoolz.xyz/lolclient/js/sweetalert2.js").then(() => {
+			this.#Toast = Sweetalert2.mixin({
+				toast: true,
+				position: "top",
+				showConfirmButton: false,
+				timer: 2000,
+				timerProgressBar: true,
+				showCloseButton: true
+			})
 		})
 
 		waitUntil(() => this.isReady(), Infinity).then(() => {
@@ -45,6 +55,16 @@ class MTZ {
 
 			this.#update()
 		})
+	}
+
+	/**
+	 * Checks if the document, WebSocket plugin, and audio object are all available.
+	 * @returns {boolean} - Returns true if all three are available, otherwise returns false.
+	 */
+	private isReady() {
+		return document.readyState === "complete"
+			&& document.querySelector('link[rel="riot:plugins:websocket"]')
+			&& this.#audio !== null
 	}
 
 	/**
@@ -97,22 +117,20 @@ class MTZ {
 	}
 
 	/**
-	 * Checks if the document, WebSocket plugin, and audio object are all available.
-	 * @returns {boolean} - Returns true if all three are available, otherwise returns false.
-	 */
-	private isReady() {
-		return document.readyState === "complete"
-			&& document.querySelector('link[rel="riot:plugins:websocket"]')
-			&& this.#audio !== null
-	}
-
-	/**
 	 * Logs a message to the console.
 	 * @param args The message to log.
 	 */
 	private log() {
 		var [text, style] = arguments[0].includes("%c") ? [...arguments] : [arguments[0], ""]
 		console.info(`%c MTZ %c ${text}`, "background: #171717; color: #ff4800; font-weight: bold", "", style)
+	}
+
+	/**
+	 * Displays a toast notification using Sweetalert2.
+	 * @param options - The options for the toast notification.
+	 */
+	Toast(options: Object) {
+		this.#Toast.fire(options)
 	}
 
 	/**
