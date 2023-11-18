@@ -55,6 +55,7 @@ class MTZ {
 			})
 		})
 
+		console.log("STARTING WAITUNTIL")
 		waitUntil(() => this.isReady()).then(() => {
 			this.log(`Initialized`)
 

@@ -6,18 +6,19 @@
  * @returns A Promise that resolves when the condition is met or rejects when the timeout is reached.
  */
 export function waitUntil(condition: (() => any), timeout = Infinity, callback: ((conditionResult: any) => {}) | null = null): Promise<any> {
+
+	console.log("STARTED WAITUNTIL", condition, timeout, callback)
+
 	return new Promise((resolve, reject) => {
 
 		let startTime = performance.now()
 
 		const checkCondition = () => {
 
-			if (timeout <= 0) {
-				reject()
-				return
-			}
+			console.log("CHECKING CONDITION", condition.toString())
 
 			if (condition()) {
+				console.log("CONDITION MET")
 				if (callback) resolve(callback(condition()))
 				else resolve(condition())
 				return
@@ -27,6 +28,7 @@ export function waitUntil(condition: (() => any), timeout = Infinity, callback: 
 			const elapsedTime = currentTime - startTime
 
 			if (elapsedTime >= timeout) {
+				console.log("TIMEOUT REACHED", condition.toString(), elapsedTime, timeout)
 				reject()
 				return
 			}
