@@ -7,8 +7,6 @@
  */
 export function waitUntil(condition: (() => any), timeout = Infinity, callback: ((conditionResult: any) => {}) | null = null): Promise<any> {
 
-	console.log("STARTED WAITUNTIL", condition, timeout, callback)
-
 	return new Promise((resolve, reject) => {
 
 		let startTime = performance.now()
