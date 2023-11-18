@@ -28,7 +28,7 @@ class MTZ {
 	#Toast!: ToastFunction
 
 	#events: { [key: string]: MTZEvent[] } = {}
-	#audio: any = null
+	audio: any = null
 	#data = {
 		lastScreen: null,
 		lastPhase: null
@@ -41,7 +41,7 @@ class MTZ {
 
 		window.MTZ = this
 
-		rcp.postInit("rcp-fe-audio", (api) => this.#audio = api.channels)
+		rcp.postInit("rcp-fe-audio", (api) => this.audio = api.channels)
 
 		//@ts-ignore
 		import("https://cdn.mashtoolz.xyz/lolclient/js/sweetalert2.js").then(() => {
@@ -55,7 +55,6 @@ class MTZ {
 			})
 		})
 
-		console.log("STARTING WAITUNTIL")
 		waitUntil(() => this.isReady()).then(() => {
 			this.log(`Initialized`)
 
@@ -74,12 +73,13 @@ class MTZ {
 
 	/**
 	 * Checks if the document, WebSocket plugin, and audio object are all available.
-	 * @returns {boolean} - Returns true if all three are available, otherwise returns false.
+	 * @returns Returns true if all three are available, otherwise returns false.
 	 */
-	private isReady() {
-		return document.readyState === "complete"
-			&& document.querySelector('link[rel="riot:plugins:websocket"]')
-			&& this.#audio !== null
+	private isReady(): boolean {
+		return (
+			document.readyState === "complete" &&
+			document.querySelector('link[rel="riot:plugins:websocket"]')
+		) ? true : false
 	}
 
 	/**
@@ -191,7 +191,8 @@ class MTZ {
 	 * @param channel - The audio channel to play the sound on.
 	 */
 	playSound(sound: string, channel: AudioChannel) {
-		this.#audio.get(channel).playSound(sound)
+		if (!this.audio) return
+		this.audio?.get(channel).playSound(sound)
 	}
 
 	/**

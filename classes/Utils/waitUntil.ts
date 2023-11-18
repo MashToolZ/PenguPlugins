@@ -15,10 +15,7 @@ export function waitUntil(condition: (() => any), timeout = Infinity, callback: 
 
 		const checkCondition = () => {
 
-			console.log("CHECKING CONDITION", condition.toString())
-
 			if (condition()) {
-				console.log("CONDITION MET")
 				if (callback) resolve(callback(condition()))
 				else resolve(condition())
 				return
@@ -28,7 +25,6 @@ export function waitUntil(condition: (() => any), timeout = Infinity, callback: 
 			const elapsedTime = currentTime - startTime
 
 			if (elapsedTime >= timeout) {
-				console.log("TIMEOUT REACHED", condition.toString(), elapsedTime, timeout)
 				reject()
 				return
 			}
