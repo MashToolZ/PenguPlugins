@@ -5,22 +5,35 @@
  * @param callback The function to call when the condition is met
  * @returns A Promise that resolves when the condition is met or rejects when the timeout is reached.
  */
-export function waitUntil(condition = () => true, timeout = 1000, callback = conditionResult => { }): Promise<void> {
+export function waitUntil(condition: (() => any), timeout = Infinity, callback: ((conditionResult: any) => {}) | null = null): Promise<any> {
 	return new Promise((resolve, reject) => {
-		let interval = setInterval(() => {
+
+		let startTime = performance.now()
+
+		const checkCondition = () => {
 
 			if (timeout <= 0) {
-				clearInterval(interval)
 				reject()
+				return
 			}
 
 			if (condition()) {
-				clearInterval(interval)
 				if (callback) resolve(callback(condition()))
 				else resolve(condition())
+				return
 			}
 
-			timeout -= 10
-		}, 10)
+			const currentTime = performance.now()
+			const elapsedTime = currentTime - startTime
+
+			if (elapsedTime >= timeout) {
+				reject()
+				return
+			}
+
+			requestAnimationFrame(checkCondition)
+		}
+
+		requestAnimationFrame(checkCondition)
 	})
 }
