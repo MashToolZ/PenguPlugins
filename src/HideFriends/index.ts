@@ -1,6 +1,6 @@
 import { MTZPlugin } from "@Classes"
 import { Tooltip } from "@Helpers"
-import { select, waitUntil } from "@Utils"
+import { select } from "@Utils"
 
 new class extends MTZPlugin {
 
@@ -12,7 +12,7 @@ new class extends MTZPlugin {
 		this.addCSS("https://cdn.mashtoolz.xyz/lolclient/css/HideFriends.css")
 	}
 
-	update() {
+	override update() {
 		const hideButton = select(".action-bar-button.hide-button")
 		const socialBar = select(".lol-social-actions-bar.actions")
 		if (!hideButton && socialBar)
@@ -24,7 +24,7 @@ new class extends MTZPlugin {
 		hideButton.className = "action-bar-button hide-button"
 		hideButton.addEventListener("click", function () {
 			DataStore.set("MTZ.hideFriends", this.classList.toggle("toggled") ? "hidden" : "visible")
-			select("lol-social-roster.roster.social-ember-fade-in").style.visibility = this.classList.contains("toggled") ? "hidden" : "visible"
+			select("lol-social-roster.roster.social-ember-fade-in")!.style.visibility = this.classList.contains("toggled") ? "hidden" : "visible"
 		})
 
 		DataStore.get("MTZ.hideFriends") === "hidden" && hideButton.click()

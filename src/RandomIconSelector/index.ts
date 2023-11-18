@@ -1,5 +1,5 @@
 import { MTZ, MTZPlugin } from "@Classes"
-import { select, waitUntil, sleep, FetchJSON } from "@Utils"
+import { select, sleep } from "@Utils"
 
 new class extends MTZPlugin {
 
@@ -12,14 +12,14 @@ new class extends MTZPlugin {
 		super(import("./package.json"))
 	}
 
-	update() {
+	override update() {
 		const customizerTabs = select(".challenges-identity-customizer-tab")
 		if (!customizerTabs) return
 
 		const selectedTab = select(".customizer-nav-item-container > lol-uikit-navigation-item[active]")
 		if (!selectedTab) return
 
-		const tabIndex = [...customizerTabs.children].indexOf(selectedTab.parentNode)
+		const tabIndex = [...customizerTabs.children].indexOf(selectedTab.parentNode as Element)
 		switch (tabIndex) {
 			case 0: {
 				const button = select("#random-icon-button")
@@ -63,12 +63,12 @@ new class extends MTZPlugin {
 	}
 
 	poolInteraction(grid: HTMLElement, header: HTMLElement) {
-		const icons = [...grid.querySelectorAll(".identity-customizer-tab-icon-component > img")].filter(icon => icon.id !== "random-icon-button")
+		const icons = [...grid.querySelectorAll(".identity-customizer-tab-icon-component > img")].filter(icon => icon.id !== "random-icon-button") as HTMLImageElement[]
 		for (const icon of icons)
 			icon.oncontextmenu = () => this.editPool(grid, header, icon)
 
 		sleep(20).then(() => {
-			const poolIcons = icons.filter(icon => this.pool.has(icon.src.split("profile-icons/").pop().split(".")[0]))
+			const poolIcons = icons.filter(icon => this.pool.has(icon.src.split("profile-icons/").pop()!.split(".")[0]))
 			for (const icon of poolIcons)
 				this.editPool(grid, header, icon, false)
 		})
@@ -80,27 +80,27 @@ new class extends MTZPlugin {
 		return headers[index + 1]
 	}
 
-	editPool(grid: HTMLElement, header: HTMLElement, icon: Element, sound: boolean = true) {
+	editPool(grid: HTMLElement, header: HTMLElement, icon: HTMLImageElement, sound: boolean = true) {
 		if (sound)
 			MTZ.playSound(this.selectSFX, "sfx")
 
 		const nextHeader = this.getNextHeader(header)
-		const iconId = icon.parentElement.getAttribute("iconid") || icon.src.split("profile-icons/").pop().split(".")[0]
+		const iconId = icon.parentElement?.getAttribute("iconid") || icon.src.split("profile-icons/").pop()!.split(".")[0]
 
-		if (icon.parentElement.classList.contains("inPool")) {
-			const hiddenElement = grid.querySelector(`.hiddenIcon[iconId='${iconId}']`)
+		if (icon.parentElement!.classList.contains("inPool")) {
+			const hiddenElement = grid.querySelector(`.hiddenIcon[iconId='${iconId}']`) as HTMLElement
 			hiddenElement.style.display = ""
 			hiddenElement.removeAttribute("iconid")
 			hiddenElement.classList.remove("hiddenIcon")
-			grid.removeChild(icon.parentElement)
+			grid.removeChild(icon.parentElement as Node)
 			this.pool.delete(iconId)
 		} else {
-			const poolElement = icon.parentElement.cloneNode(true)
+			const poolElement = icon.parentElement!.cloneNode(true) as HTMLElement
 			poolElement.classList.add("inPool")
-			poolElement.oncontextmenu = () => this.editPool(grid, header, poolElement.querySelector("img"))
-			icon.parentElement.style.display = "none"
-			icon.parentElement.setAttribute("iconid", iconId)
-			icon.parentElement.classList.add("hiddenIcon")
+			poolElement.oncontextmenu = () => this.editPool(grid, header, poolElement.querySelector("img") as HTMLImageElement)
+			icon.parentElement!.style.display = "none"
+			icon.parentElement!.setAttribute("iconid", iconId)
+			icon.parentElement!.classList.add("hiddenIcon")
 			grid.insertBefore(poolElement, nextHeader)
 			this.pool.add(iconId)
 		}
@@ -110,12 +110,12 @@ new class extends MTZPlugin {
 
 	selectRandomIcon(grid: HTMLElement, allIcons: boolean = false) {
 
-		const icons = [...grid.querySelectorAll(`.identity-customizer-tab-icon-component${allIcons ? "" : ".inPool"} > img.identity-customizer-icon:not(.selected):not([id='random-icon-button'])`)]
+		const icons = [...grid.querySelectorAll(`.identity-customizer-tab-icon-component${allIcons ? "" : ".inPool"} > img.identity-customizer-icon:not(.selected):not([id='random-icon-button'])`)] as HTMLImageElement[]
 		if (icons.length === 0) return
 
 		const random = Math.floor(Math.random() * icons.length)
-		const randomIconId = icons[random].src.split("profile-icons/").pop().split(".")[0]
-		const selectedIcon = grid.querySelector(`.identity-customizer-icon[src*='${randomIconId}']`)
+		const randomIconId = icons[random].src.split("profile-icons/").pop()!.split(".")[0]
+		const selectedIcon = grid.querySelector(`.identity-customizer-icon[src*='${randomIconId}']`) as HTMLImageElement
 
 		if (selectedIcon) {
 			selectedIcon.click()

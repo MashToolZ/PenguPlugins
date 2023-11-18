@@ -1,19 +1,20 @@
+import { MTZ } from "@Classes"
 import { ContextMenuType } from "@Types"
 
 interface ContextMenuOption {
 	type: ContextMenuType
 	index: number
 	text: string
-	callback: (target: HTMLElement) => void
+	callback: (target: HTMLElement | null) => void
 }
 
 export class ContextMenu {
 
 	public open: boolean = false
-	public type: ContextMenuType = null
-	public target: HTMLElement = null
-	public menu: HTMLElement = null
-	public optionsHolder: HTMLElement = null
+	public type!: ContextMenuType | null
+	public target!: HTMLElement | null
+	public menu!: HTMLElement | null
+	public optionsHolder!: HTMLElement
 
 	constructor() { }
 
@@ -33,7 +34,7 @@ export class ContextMenu {
 			div.addEventListener("click", () => {
 				MTZ.playSound("fe/lol-uikit/sfx-uikit-click-generic.ogg", "sfx")
 				option.callback(this.target)
-				this.menu.blur()
+				this.menu!.blur()
 			})
 		}
 	}

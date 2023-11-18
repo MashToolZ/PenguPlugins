@@ -1,12 +1,14 @@
 export class Tooltip {
 
-	public readonly timeout = null
+	public timeout!: NodeJS.Timeout
+	public readonly tooltip: HTMLElement
+	public readonly tooltipInner: HTMLElement
 
 	constructor(
 		public readonly type: "system" | "top",
-		public readonly element: HTMLElement,
+		public readonly element: Element,
 		public readonly tooltipHolder: HTMLElement,
-		public readonly text: String,
+		public readonly text: string,
 		public readonly fading: Boolean = false,
 		public readonly ms: number = 200,
 		public readonly delay: number = 200
@@ -19,7 +21,6 @@ export class Tooltip {
 
 		const tooltipInner = document.createElement("div")
 		tooltipInner.setAttribute("type", this.type)
-		tooltipInner.setAttribute("style", `top: ${this.y}px; left: ${this.x}px; opacity: ${this.fading ? 0 : 1};`)
 		tooltip.appendChild(tooltipInner)
 
 		const lolUikitTooltip = document.createElement("lol-uikit-tooltip")
@@ -54,16 +55,16 @@ export class Tooltip {
 	}
 
 	fade(fadeIn = true, deleteAfter = false) {
-		return new Promise(resolve => {
+		return new Promise<void>(resolve => {
 			let opacity = fadeIn ? 0 : 1
 			const gap = 1000 / 120 * 0.02
 			const val = fadeIn ? gap : -gap
 
-			this.tooltipInner.style.opacity = opacity
+			this.tooltipInner.style.opacity = `${opacity}`
 
 			const timer = setInterval(() => {
 				opacity += val
-				this.tooltipInner.style.opacity = opacity
+				this.tooltipInner.style.opacity = `${opacity}`
 
 				if (opacity <= 0 || opacity >= 1) {
 					clearInterval(timer)
@@ -82,10 +83,10 @@ export class Tooltip {
 			[rect.x - (rect.width / 2), rect.y + rect.height]
 
 		this.tooltipInner.setAttribute("style", `top: ${y}px; left: ${x}px; opacity: ${this.fading ? 0 : 1};`)
-		this.tooltipInner.querySelector("p").innerHTML = this.text
+		this.tooltipInner.querySelector("p")!.innerHTML = this.text
 
 		if (!this.exists())
-			document.querySelector("#lol-uikit-layer-manager-wrapper").appendChild(this.tooltip)
+			document.querySelector("#lol-uikit-layer-manager-wrapper")!.appendChild(this.tooltip)
 
 		if (this.fading)
 			this.fade(true)

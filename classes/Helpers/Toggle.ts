@@ -7,10 +7,10 @@ export interface ToggleOptions {
 	name: string
 	className: string
 	tooltip: string
-	disabled: () => boolean
-	onEnable: Function
-	onDisable: Function
-	onToggle: Function
+	disabled?: () => boolean
+	onEnable?: Function
+	onDisable?: Function
+	onToggle?: Function
 }
 
 /**
@@ -18,7 +18,6 @@ export interface ToggleOptions {
  */
 export class Toggle {
 
-	public readonly button: HTMLElement | null = null
 	private readonly parent: string
 	private readonly name: string
 	private readonly className: string
@@ -61,25 +60,23 @@ export class Toggle {
 
 		this.init()
 
-		return this.button
+		return this
 	}
 
 	/**
 	 * Initializes the toggle button and adds it to the parent element.
 	 * If the button already exists, the method returns early.
-	 * @returns {Promise<void>}
 	 */
-	async init() {
+	async init(): Promise<void> {
 		if (select(`#${this.name}`)) return
 
-		let status = DataStore.get(`MTZ.${this.name}`) || false
+		let status = (DataStore.get(`MTZ.${this.name}`) || false) as boolean
 
 		const button = this.createButton(status)
-		const toggleWrapper = button.querySelector(`.${button.className}-wrapper`)
-		const toggleContainer = button.querySelector(".toggle-container")
-		this.button = toggleWrapper
+		const toggleWrapper = button.querySelector(`.${button.className}-wrapper`) as Element
+		const toggleContainer = button.querySelector(".toggle-container") as Element
 
-		select(this.parent).insertAdjacentElement("beforebegin", button)
+		select(this.parent)!.insertAdjacentElement("beforebegin", button)
 
 		if (this.tooltip)
 			new Tooltip("system", toggleContainer, button, this.tooltip, true, 200, 300)

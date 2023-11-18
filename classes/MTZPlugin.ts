@@ -1,6 +1,5 @@
 import { MTZ } from "@Classes"
-import { addCSS, subscribe, waitUntil } from "@Utils"
-import { ContextMenuType } from "@Types"
+import { addCSS } from "@Utils"
 import type { ContextMenu } from "@Helpers"
 
 /**
@@ -8,12 +7,12 @@ import type { ContextMenu } from "@Helpers"
  */
 export class MTZPlugin {
 
-	public readonly name: string
-	public readonly version: string
-	public readonly author: string
-	public readonly priority: number = 0
+	public name!: string
+	public version!: string
+	public author!: string
+	public priority: number = 0
 
-	public readonly initialized: boolean = false
+	public initialized: boolean = false
 
 	/**
 	 * Creates a new instance of the MTZPlugin class.
@@ -38,7 +37,7 @@ export class MTZPlugin {
 	 * Logs a message to the console.
 	 * @param args The message to log.
 	 */
-	log() {
+	log(..._: any[]) {
 		var [text, style] = arguments[0].includes("%c") ? [...arguments] : [arguments[0], ""]
 		console.info(`%c MTZ - ${this.name} %c ${text}`, "background: #171717; color: #ff4800; font-weight: bold", "", style)
 	}
@@ -75,20 +74,11 @@ export class MTZPlugin {
 	}
 
 	/**
-	 * Emits an event with the given name and arguments.
-	 * @param event - The name of the event to emit.
-	 * @param args - The arguments to pass to the event listeners.
-	 * @returns The modified arguments after all event listeners have been called.
-	 */
-	emit(event: string, ...args: any[]) {
-		return MTZ.emit(event, ...args)
-	}
-
-	/**
 	 * Called when the screen changes.
 	 * @param screen - The current screen.
 	 * @param lastScreen - The previous screen.
 	 */
+	// @ts-ignore
 	onScreen(screen: string, lastScreen: string) { }
 
 	/**
@@ -96,11 +86,18 @@ export class MTZPlugin {
 	 * @param phase - The current phase.
 	 * @param lastPhase - The previous phase.
 	 */
+	// @ts-ignore
 	onPhase(phase: string, lastPhase: string) { }
 
 	/**
 	 * Handles the context menu event.
 	 * @param contextMenu The context menu object.
 	 */
+	// @ts-ignore
 	onContextMenu(contextMenu: ContextMenu) { }
+
+	/**
+	 * Emitted whenever the MTZ instance updates
+	 */
+	update() { }
 }

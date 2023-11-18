@@ -10,7 +10,7 @@ export class Kyasshu {
 	 * @param key - The string key to split.
 	 * @returns An array containing the parts, the last part, and the cache object.
 	 */
-	#generic(key: string) {
+	#generic(key: string): [string[], any, any] {
 		let parts = key.toString().split("."),
 			last = parts.pop(),
 			obj = this.#cache
@@ -134,6 +134,7 @@ export class Kyasshu {
 			obj = obj[part]
 		}
 		delete obj[last]
+		return true
 	}
 
 	/**

@@ -6,8 +6,7 @@ new class extends MTZPlugin {
 
 	private AutoAccepting = false
 	private playerResponse = null
-	private button: HTMLElement
-	private options: ToggleOptions
+	private options!: ToggleOptions
 
 	constructor() {
 		super(import("./package.json"))
@@ -34,10 +33,10 @@ new class extends MTZPlugin {
 	override onScreen(screen: string) {
 		switch (screen) {
 			case "PARTIES": {
-				waitUntil(() => select(this.options.parent), 1000, false)
+				waitUntil(() => select(this.options.parent), 2000)
 					.then(() => {
 						if (!select(`#${this.options.name}`))
-							this.button = new Toggle(this.options)
+							new Toggle(this.options)
 					})
 					.catch((err) => console.error(err))
 				break
@@ -45,7 +44,7 @@ new class extends MTZPlugin {
 		}
 	}
 
-	override onPhase(phase: string, lastPhase: string) {
+	override onPhase(phase: string, _lastPhase: string) {
 		switch (phase) {
 
 			case "LOBBY":
@@ -59,7 +58,7 @@ new class extends MTZPlugin {
 					this.AutoAccepting = true
 					sleep(3000).then(() => {
 						if (this.playerResponse !== "None")
-							select(".ready-check-button-accept").click()
+							select(".ready-check-button-accept")!.click()
 						this.AutoAccepting = false
 					})
 				}
@@ -68,7 +67,7 @@ new class extends MTZPlugin {
 		}
 	}
 
-	onPlayerReponse(message) {
+	onPlayerReponse(message: { data: string }) {
 		try {
 			const status = JSON.parse(message.data)[2]?.data?.playerResponse || null
 			this.playerResponse = status

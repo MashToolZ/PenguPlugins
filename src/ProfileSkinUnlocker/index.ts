@@ -1,5 +1,4 @@
 import { MTZPlugin } from "@Classes"
-import { waitUntil } from "@Utils"
 
 new class extends MTZPlugin {
 
@@ -7,7 +6,7 @@ new class extends MTZPlugin {
 		super(import("./package.json"))
 	}
 
-	override onScreen(screen: string, lastScreen: string): void {
+	override onScreen(screen: string, _lastScreen: string): void {
 		switch (screen) {
 			case "PROFILE": {
 				const owned = Symbol("owned")

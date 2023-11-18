@@ -8,7 +8,7 @@ interface Plugin {
 
 interface RcpAnnouceEvent extends CustomEvent {
 	errorHandler: () => any
-	registrationHandler: (registrar: (e) => Promise<any>) => Promise<any> | void
+	registrationHandler: (registrar: (e: any) => Promise<any>) => Promise<any> | void
 }
 
 // built-in types
@@ -25,7 +25,7 @@ interface Action {
 }
 
 interface CommandBar {
-	addAction: (action) => void
+	addAction: (action: any) => void
 	show: () => void
 	update: () => void
 }
@@ -71,9 +71,16 @@ interface PluginFS {
 	rm: (path: string, recursively: boolean) => Promise<number>
 }
 
+interface RCP {
+	preInit: (name: string, callback: (context: any) => void) => void;
+	postInit: (name: string, callback: (context: any) => void, blocking?: boolean) => void;
+	whenReady: (name: string) => Promise<any>;
+	get: (name: string) => any;
+}
+
 // globals
 
-namespace Pengu {
+declare namespace Pengu {
 	const version: string;
 	const superPotato: boolean;
 	const plugins: string[];
@@ -84,6 +91,7 @@ declare const CommandBar: CommandBar;
 declare const Toast: Toast;
 declare const Effect: Effect;
 declare const PluginFS: PluginFS;
+declare const rcp: RCP;
 
 declare const openDevTools: (remote?: boolean) => void;
 declare const openAssetsFolder: () => void;
@@ -100,6 +108,7 @@ declare interface Window {
 	Toast: Toast;
 	Effect: Effect;
 	PluginFS: PluginFS;
+	rcp: RCP;
 
 	openDevTools: typeof openDevTools;
 	openAssetsFolder: typeof openAssetsFolder;

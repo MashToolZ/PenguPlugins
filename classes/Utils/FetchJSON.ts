@@ -4,17 +4,18 @@
  * @param options - The options to use for the fetch request.
  * @returns A Promise that resolves to the JSON data.
  */
-export function FetchJSON(url: string, options?: RequestInit): Promise<JSON> {
+export async function FetchJSON(url: string, options?: RequestInit): Promise<any> {
 	try {
-		return fetch(url, options || {
+		const data = await fetch(url, options || {
 			method: "GET",
 			headers: {
 				"Accept": "application/json",
 				"Content-Type": "application/json"
 			}
-		}).then((data) => data.json())
+		})
+		return await data.json()
 	} catch (e) {
 		console.error(e)
-		return []
+		return Promise.resolve(null)
 	}
 }

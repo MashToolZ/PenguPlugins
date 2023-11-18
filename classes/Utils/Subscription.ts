@@ -9,6 +9,9 @@ const subscriptions: Map<string, Subscription> = new Map()
  */
 class Subscription {
 
+	private readonly endpoint: string
+	private readonly ws: WebSocket
+
 	/**
 	 * A map of subscription callbacks.
 	 * The keys are strings and the values are functions.
@@ -26,7 +29,7 @@ class Subscription {
 		this.endpoint = endpoint
 		this.set(key, callback)
 
-		const uri = document.querySelector('link[rel="riot:plugins:websocket"]').href
+		const uri = (document.querySelector('link[rel="riot:plugins:websocket"]') as HTMLLinkElement).href
 		this.ws = new WebSocket(uri, "wamp")
 
 		this.ws.onopen = () => this.ws.send(JSON.stringify([5, "OnJsonApiEvent" + endpoint.replace(/\//g, "_")]))
@@ -91,10 +94,10 @@ function subscribe(endpoint: string, id: string, callback: Function): string | b
 		return false
 	}
 
-	if (subscriptions.get(endpoint).has(id))
+	if (subscriptions.get(endpoint)!.has(id))
 		return true
 
-	return subscriptions.get(endpoint).set(id, callback)
+	return subscriptions.get(endpoint)!.set(id, callback)
 }
 
 /**
@@ -106,10 +109,10 @@ function unsubscribe(endpoint: string, id: string) {
 	if (!subscriptions.has(endpoint))
 		return
 
-	if (!subscriptions.get(endpoint).has(id))
+	if (!subscriptions.get(endpoint)!.has(id))
 		return
 
-	subscriptions.get(endpoint).delete(id)
+	subscriptions.get(endpoint)!.delete(id)
 }
 
 export { subscribe, unsubscribe }

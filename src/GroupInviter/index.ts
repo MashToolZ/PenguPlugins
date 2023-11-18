@@ -1,7 +1,6 @@
-import { MTZ, MTZPlugin } from "@Classes"
-import { Tooltip } from "@Helpers"
+import { MTZPlugin } from "@Classes"
 import type { ContextMenu } from "@Helpers"
-import { FetchJSON, select, waitUntil } from "@Utils"
+import { FetchJSON } from "@Utils"
 import { Friend, Group } from "@Types"
 
 new class extends MTZPlugin {
@@ -19,9 +18,9 @@ new class extends MTZPlugin {
 		}])
 	}
 
-	async inviteGroup(target: HTMLElement) {
+	async inviteGroup(target: HTMLElement | null) {
 
-		const name = target.closest("lol-social-roster-group")?.children[0]?.getAttribute("data-name")
+		const name = target?.closest("lol-social-roster-group")?.children[0]?.getAttribute("data-name")
 		if (!name) return
 
 		const groups = await FetchJSON("/lol-chat/v1/friend-groups") as Group[]

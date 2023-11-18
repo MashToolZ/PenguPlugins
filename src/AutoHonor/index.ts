@@ -4,8 +4,7 @@ import { FetchJSON, select, waitUntil } from "@Utils"
 
 new class extends MTZPlugin {
 
-	private button: HTMLElement
-	private options: ToggleOptions
+	private options!: ToggleOptions
 
 	constructor() {
 		super(import("./package.json"))
@@ -26,10 +25,10 @@ new class extends MTZPlugin {
 	override onScreen(screen: string) {
 		switch (screen) {
 			case "PARTIES": {
-				waitUntil(() => select(this.options.parent), 1000, false)
+				waitUntil(() => select(this.options.parent), 2000)
 					.then(() => {
 						if (!select(`#${this.options.name}`))
-							this.button = new Toggle(this.options)
+							new Toggle(this.options)
 					})
 					.catch((err) => console.error(err))
 				break
@@ -37,7 +36,7 @@ new class extends MTZPlugin {
 		}
 	}
 
-	override onPhase(phase: string, lastPhase: string): void {
+	override onPhase(phase: string, _lastPhase: string): void {
 		switch (phase) {
 			case "PREENDOFGAME": {
 				if (!(DataStore.get(`MTZ.${this.name}`) || false)) return
@@ -53,12 +52,12 @@ new class extends MTZPlugin {
 							Reflect.deleteProperty(Object.prototype, "canVote")
 
 							const { eligiblePlayers } = await FetchJSON("/lol-honor-v2/v1/ballot")
-							const party = await FetchJSON("/lol-lobby/v2/comms/members")
+							const party = await FetchJSON("/lol-lobby/v2/comms/members") as { players: { puuid: string }[] }
 
-							const puuids = eligiblePlayers.map(e => e.puuid)
+							const puuids = eligiblePlayers.map((e: { puuid: string }) => e.puuid)
 							const partyPuuids = Object.values(party.players).map(p => p.puuid).filter(puuid => puuids.includes(puuid))
 
-							const players = partyPuuids.length > 0 ? eligiblePlayers.filter(e => partyPuuids.includes(e.puuid)) : eligiblePlayers
+							const players = partyPuuids.length > 0 ? eligiblePlayers.filter((e: { puuid: string }) => partyPuuids.includes(e.puuid)) : eligiblePlayers
 							const { puuid, summonerId, summonerName } = players[Math.random() * players.length | 0]
 
 							MTZ.Toast({
@@ -85,7 +84,6 @@ new class extends MTZPlugin {
 			}
 
 			default: {
-				this.voted = false
 				Reflect.deleteProperty(Object.prototype, "canVote")
 				break
 			}

@@ -3,6 +3,19 @@ import { select, subscribe, waitUntil } from "@Utils"
 import { AudioChannel, MTZEvent } from "@Types"
 import { ContextMenu } from "@Helpers"
 
+declare global {
+	interface Window {
+		MTZ: MTZ
+		Sweetalert2: any
+	}
+}
+
+interface ToastFunction {
+	(options: Object): void
+	fire(options: Object): void
+	mixin(options: Object): void
+}
+
 /**
  * The MTZ class is the main class for the PenguPlugins library.
  * It provides functionality for interacting with the League of Legends client and plugins.
@@ -10,16 +23,16 @@ import { ContextMenu } from "@Helpers"
 class MTZ {
 
 	private plugins: MTZPlugin[] = []
-	private phase: string = null
+	private phase: string | null = null
 	private contextMenu = new ContextMenu()
-	private #Toast: Function
+	#Toast!: ToastFunction
 
 	#events: { [key: string]: MTZEvent[] } = {}
-	#audio = null
+	#audio: any = null
 	#data = {
 		lastScreen: null,
 		lastPhase: null
-	}
+	} as { lastScreen: string | null, lastPhase: string | null }
 
 	/**
 	 * Initializes the `MTZ` instance
@@ -30,8 +43,9 @@ class MTZ {
 
 		rcp.postInit("rcp-fe-audio", (api) => this.#audio = api.channels)
 
+		//@ts-ignore
 		import("https://cdn.mashtoolz.xyz/lolclient/js/sweetalert2.js").then(() => {
-			this.#Toast = Sweetalert2.mixin({
+			this.#Toast = window.Sweetalert2.mixin({
 				toast: true,
 				position: "top",
 				showConfirmButton: false,
@@ -41,12 +55,12 @@ class MTZ {
 			})
 		})
 
-		waitUntil(() => this.isReady(), Infinity).then(() => {
+		waitUntil(() => this.isReady()).then(() => {
 			this.log(`Initialized`)
 
-			document.addEventListener("contextmenu", event => this.contextMenu.target = event.target, true)
+			document.addEventListener("contextmenu", event => this.contextMenu.target = event.target as HTMLElement, true)
 
-			subscribe("/lol-gameflow/v1/gameflow-phase", "phase", (message) => this.phase = JSON.parse(message.data)[2]?.data?.toUpperCase() || null)
+			subscribe("/lol-gameflow/v1/gameflow-phase", "phase", (message: { data: string }) => this.phase = JSON.parse(message.data)[2]?.data?.toUpperCase() || null)
 
 			this.getPlugins().forEach(plugin => this.initPlugin(plugin))
 
@@ -88,14 +102,6 @@ class MTZ {
 	}
 
 	/**
-	 * Removes the plugin from the list of plugins
-	 * @param plugin - The plugin to remove.
-	 */
-	private removePlugin(plugin: MTZPlugin) {
-		this.plugins.splice(this.plugins.indexOf(plugin), 1)
-	}
-
-	/**
 	 * Returns the plugin with the specified name.
 	 * @param name - The name of the plugin to retrieve.
 	 * @returns The plugin with the specified name, or undefined if no such plugin exists.
@@ -108,7 +114,7 @@ class MTZ {
 	 * Returns an array of plugins.
 	 * @returns {Array} An array of plugins.
 	 */
-	getPlugins() {
+	getPlugins(): Array<any> {
 		return this.plugins.sort((a, b) => {
 			if (a.priority === b.priority)
 				return a.name.localeCompare(b.name)
@@ -120,7 +126,7 @@ class MTZ {
 	 * Logs a message to the console.
 	 * @param args The message to log.
 	 */
-	private log() {
+	private log(..._: any[]) {
 		var [text, style] = arguments[0].includes("%c") ? [...arguments] : [arguments[0], ""]
 		console.info(`%c MTZ %c ${text}`, "background: #171717; color: #ff4800; font-weight: bold", "", style)
 	}
@@ -135,9 +141,7 @@ class MTZ {
 
 	/**
 	 * Updates the state of the MTZ instance.
-	 * Emits "screen" and "phase" events if the screen or phase has changed.
 	 * Calls the "update" method of each plugin.
-	 * Requests a new animation frame to update the state again.
 	 */
 	#update() {
 
@@ -170,14 +174,14 @@ class MTZ {
 	 * Returns the current screen in the format of `MAIN/SUB` if both are available, otherwise just `MAIN`
 	 * @returns {string}
 	 */
-	private get screen() {
+	private get screen(): string {
 		if (!document.body || document.querySelector(".lol-loading-screen-container"))
 			return "LOADING"
 
-		let main = document.querySelector(`.main-navigation-menu-item[active]`)
-		main = main ? main.offsetParent ? main.classList[1].split("_")[3].toUpperCase() : null : document.querySelector("section.rcp-fe-viewport-main > div.screen-root")?.getAttribute("data-screen-name")?.split("rcp-fe-lol-")[1]?.toUpperCase() ?? null
+		const element = document.querySelector(`.main-navigation-menu-item[active]`) as HTMLElement
+		const mainScreen = element ? element.offsetParent ? element.classList[1].split("_")[3].toUpperCase() : null : document.querySelector("section.rcp-fe-viewport-main > div.screen-root")?.getAttribute("data-screen-name")?.split("rcp-fe-lol-")[1]?.toUpperCase() ?? null
 
-		return main ?? "UNKNOWN"
+		return mainScreen ?? "UNKNOWN"
 	}
 
 	/**
@@ -212,7 +216,7 @@ class MTZ {
 	 * @param priority - An optional parameter that specifies the priority of the event listener.
 	 */
 	once(event: string, callback: Function, priority: number = 0): void {
-		const remove = this.on(event, (...args) => {
+		const remove = this.on(event, (...args: any) => {
 			callback(...args)
 			remove()
 		}, priority)
@@ -262,16 +266,16 @@ class MTZ {
 	 * @param contextMenu - The HTML element representing the context menu.
 	 * @param target - The HTML element that triggered the context menu event.
 	 */
-	#onContextMenu(contextMenu: HTMLElement) {
+	#onContextMenu(contextMenu: HTMLElement | null) {
 
 		this.contextMenu.menu = contextMenu ?? null
 		this.contextMenu.optionsHolder = contextMenu?.shadowRoot?.querySelector("div.context-menu.context-menu-root") as HTMLElement ?? null
 		const options = this.contextMenu.optionsHolder ? [...this.contextMenu.optionsHolder?.children] : [] as string[]
 
-		if (this.contextMenu.target.closest("lol-social-roster-group"))
+		if (this.contextMenu.target!.closest("lol-social-roster-group"))
 			this.contextMenu.type = "Folder"
 
-		if (this.contextMenu.target.closest("lol-social-roster-member"))
+		if (this.contextMenu.target!.closest("lol-social-roster-member"))
 			this.contextMenu.type = "Friend"
 
 		if (this.logging)
