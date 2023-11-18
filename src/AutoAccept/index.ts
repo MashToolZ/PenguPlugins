@@ -12,7 +12,7 @@ new class extends MTZPlugin {
 		super(import("./package.json"))
 	}
 
-	override init(): void {
+	override onInit(): void {
 
 		this.options = {
 			parent: ".open-party-toggle",

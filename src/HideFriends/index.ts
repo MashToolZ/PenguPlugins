@@ -8,7 +8,7 @@ new class extends MTZPlugin {
 		super(import("./package.json"))
 	}
 
-	override init(): void {
+	override onInit(): void {
 		this.addCSS("https://cdn.mashtoolz.xyz/lolclient/css/HideFriends.css")
 	}
 

@@ -62,7 +62,7 @@ class MTZ {
 
 			subscribe("/lol-gameflow/v1/gameflow-phase", "phase", (message: { data: string }) => this.phase = JSON.parse(message.data)[2]?.data?.toUpperCase() || null)
 
-			this.getPlugins().forEach(plugin => this.initPlugin(plugin))
+			this.getPlugins().forEach(plugin => !plugin.initialized && this.initPlugin(plugin))
 
 			this.on("screen", this.#onScreen.bind(this))
 			this.on("phase", this.#onPhase.bind(this))
@@ -88,7 +88,7 @@ class MTZ {
 	 */
 	initPlugin(plugin: MTZPlugin) {
 		plugin.initialized = true
-		plugin.init()
+		plugin.onInit()
 		plugin.log("Initialized")
 	}
 
@@ -98,7 +98,7 @@ class MTZ {
 	 */
 	addPlugin(plugin: MTZPlugin) {
 		this.plugins.push(plugin)
-		if (this.isReady())
+		if (!plugin.initialized && this.isReady())
 			this.initPlugin(plugin)
 	}
 
@@ -115,7 +115,7 @@ class MTZ {
 	 * Returns an array of plugins.
 	 * @returns {Array} An array of plugins.
 	 */
-	getPlugins(): Array<any> {
+	getPlugins(): Array<MTZPlugin> {
 		return this.plugins.sort((a, b) => {
 			if (a.priority === b.priority)
 				return a.name.localeCompare(b.name)

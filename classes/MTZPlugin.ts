@@ -31,7 +31,7 @@ export class MTZPlugin {
 	/**
 	 * Called when the plugin is initialized.
 	 */
-	init() { }
+	onInit() { }
 
 	/**
 	 * Logs a message to the console.
