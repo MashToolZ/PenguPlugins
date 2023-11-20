@@ -33,3 +33,18 @@ export type AudioChannel = "music" | "voice" | "sfx"
  * Represents the type of context menu
  */
 export type ContextMenuType = "Friend" | "Folder"
+
+/**
+ * Represents the type of player response from ReadyCheck
+ */
+export type PlayerResponse = null | "None" | "Accepted" | "Declined"
+
+/**
+ * Represents the different Gameflow Phases
+ */
+export type GameFlowPhase = "LOBBY" | "MATCHMAKING" | "READYCHECK" | "CHAMPSELECT" | "GAMESTART" | "INPROGRESS" | "PREENDOFGAME" | "ENDOFGAME" | "WAITINGFORSTATS" | "NONE"
+
+/**
+ * Represents the different Screens
+ */
+export type GameScreen = "UNKNOWN" | "LOADING" | "HOME-MAIN" | "TFT" | "HOME" | "EVENT" | "COMPETITIVE" | "PROFILE" | "COLLECTION" | "LOOT" | "STORE" | "GAME_SELECTION" | "PARTIES"
