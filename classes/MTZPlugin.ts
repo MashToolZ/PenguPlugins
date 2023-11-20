@@ -1,6 +1,7 @@
 import { MTZ, Logger } from "@Classes"
 import { addCSS } from "@Utils"
 import type { ContextMenu } from "@Helpers"
+import { GameFlowPhase, GameScreen } from "@Types"
 
 /**
  * Represents a plugin for the MTZ framework.
@@ -34,20 +35,6 @@ export class MTZPlugin {
 	}
 
 	/**
-	 * Called when the plugin is initialized.
-	 */
-	onInit() { }
-
-	/**
-	 * Logs a message to the console.
-	 * @param args The message to log.
-	 */
-	log(..._: any[]) {
-		var [text, style] = arguments[0].includes("%c") ? [...arguments] : [arguments[0], ""]
-		console.info(`%c MTZ - ${this.name} %c ${text}`, "background: #171717; color: #ff4800; font-weight: bold", "", style)
-	}
-
-	/**
 	 * Adds a CSS file to the document.
 	 * @param url - The URL of the CSS file to add.
 	 * @returns A Promise that resolves when the CSS file has been added.
@@ -77,6 +64,11 @@ export class MTZPlugin {
 	once(event: string, callback: Function, priority?: number): void {
 		MTZ.once(event, callback, priority)
 	}
+
+	/**
+	 * Called when the plugin is initialized.
+	 */
+	onInit() { }
 
 	/**
 	 * Called when the screen changes.
