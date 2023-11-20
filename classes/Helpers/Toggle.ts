@@ -60,6 +60,12 @@ export class Toggle {
 
 		this.init()
 
+		let status = (DataStore.get(`MTZ.${this.name}`) || false) as boolean
+		if (status)
+			this.onEnable()
+		else
+			this.onDisable()
+
 		return this
 	}
 
