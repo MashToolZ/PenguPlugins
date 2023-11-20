@@ -1,4 +1,4 @@
-import { MTZ } from "@Classes"
+import { MTZ, Logger } from "@Classes"
 import { addCSS } from "@Utils"
 import type { ContextMenu } from "@Helpers"
 
@@ -6,6 +6,8 @@ import type { ContextMenu } from "@Helpers"
  * Represents a plugin for the MTZ framework.
  */
 export class MTZPlugin {
+
+	public Logger!: Logger
 
 	public name!: string
 	public version!: string
@@ -24,6 +26,9 @@ export class MTZPlugin {
 			this.version = version
 			this.author = author
 			this.priority = priority ?? 0
+
+			this.Logger = new Logger(`%c MTZ - ${this.name} `, "background: #171717; color: #ff4800; font-weight: bold")
+
 			MTZ.addPlugin(this)
 		})
 	}

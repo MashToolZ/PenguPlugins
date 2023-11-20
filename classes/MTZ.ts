@@ -1,4 +1,4 @@
-import { MTZPlugin } from "@Classes"
+import { MTZPlugin, Logger } from "@Classes"
 import { select, subscribe, waitUntil } from "@Utils"
 import { AudioChannel, MTZEvent } from "@Types"
 import { ContextMenu } from "@Helpers"
@@ -22,6 +22,8 @@ interface ToastFunction {
  */
 class MTZ {
 
+	public Logger: Logger = new Logger(`%c MTZ `, "background: #171717; color: #ff4800; font-weight: bold")
+
 	private plugins: MTZPlugin[] = []
 	private phase: string | null = null
 	private contextMenu = new ContextMenu()
@@ -37,7 +39,7 @@ class MTZ {
 	/**
 	 * Initializes the `MTZ` instance
 	 */
-	constructor(private readonly logging: boolean = false) {
+	constructor() {
 
 		window.MTZ = this
 
@@ -56,7 +58,8 @@ class MTZ {
 		})
 
 		waitUntil(() => this.isReady()).then(() => {
-			this.log(`Initialized`)
+
+			this.Logger.log("Initialized")
 
 			document.addEventListener("contextmenu", event => this.contextMenu.target = event.target as HTMLElement, true)
 
@@ -89,7 +92,7 @@ class MTZ {
 	initPlugin(plugin: MTZPlugin) {
 		plugin.initialized = true
 		plugin.onInit()
-		plugin.log("Initialized")
+		plugin.Logger.log("Initialized")
 	}
 
 	/**
@@ -121,15 +124,6 @@ class MTZ {
 				return a.name.localeCompare(b.name)
 			return b.priority - a.priority
 		})
-	}
-
-	/**
-	 * Logs a message to the console.
-	 * @param args The message to log.
-	 */
-	private log(..._: any[]) {
-		var [text, style] = arguments[0].includes("%c") ? [...arguments] : [arguments[0], ""]
-		console.info(`%c MTZ %c ${text}`, "background: #171717; color: #ff4800; font-weight: bold", "", style)
 	}
 
 	/**
@@ -245,9 +239,7 @@ class MTZ {
 	 * @param screen - The current screen.
 	 * @param lastScreen - The last screen.
 	 */
-	#onScreen(screen: string, lastScreen: string) {
-		if (this.logging)
-			this.log(`%cScreen: ${screen}`, "color: #ac4")
+		this.Logger.info([`%cScreen: ${screen}`, "color: #ac4"])
 		this.plugins.forEach(plugin => plugin.initialized && plugin.onScreen && plugin.onScreen(screen, lastScreen))
 	}
 
@@ -256,9 +248,7 @@ class MTZ {
 	 * @param phase - The current phase.
 	 * @param lastPhase - The previous phase.
 	 */
-	#onPhase(phase: string, lastPhase: string) {
-		if (this.logging)
-			this.log(`%cPhase: ${phase}`, "color: #ca4")
+		this.Logger.info([`%cPhase: ${phase}`, "color: #ca4"])
 		this.plugins.forEach(plugin => plugin.initialized && plugin.onPhase && plugin.onPhase(phase, lastPhase))
 	}
 
@@ -280,8 +270,8 @@ class MTZ {
 		if (this.contextMenu.target!.closest("lol-social-roster-member"))
 			this.contextMenu.type = "Friend"
 
-		if (this.logging)
-			this.log(`%cContextMenu: ${this.contextMenu.open ? "Opened" : "Closed"} (${this.contextMenu.type})`, "color: #4ac")
+		this.Logger.info([`%cContextMenu: ${this.contextMenu.open ? "Opened" : "Closed"} (${this.contextMenu.type})`, "color: #4ac"])
+
 		this.plugins.forEach(plugin => plugin.initialized && plugin.onContextMenu && plugin.onContextMenu(this.contextMenu))
 
 		if (!options.length) {
