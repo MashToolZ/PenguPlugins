@@ -1,5 +1,6 @@
 import { MTZPlugin } from "@Classes"
 import { Toggle, ToggleOptions } from "@Helpers"
+import { GameFlowPhase, GameScreen, PlayerResponse } from "@Types"
 import { select, subscribe, unsubscribe, waitUntil, sleep, FetchJSON } from "@Utils"
 
 new class extends MTZPlugin {
@@ -33,18 +34,18 @@ new class extends MTZPlugin {
 	override onScreen(screen: GameScreen) {
 		switch (screen) {
 			case "PARTIES": {
-				waitUntil(() => select(this.options.parent), 2000)
+				waitUntil(() => select(this.options.parent))
 					.then(() => {
 						if (!select(`#${this.options.name}`))
 							new Toggle(this.options)
 					})
-					.catch((err) => console.error(err))
+					.catch((reason) => this.Logger.error(reason))
 				break
 			}
 		}
 	}
 
-	override onPhase(phase: string, _lastPhase: string) {
+	override onPhase(phase: GameFlowPhase) {
 		switch (phase) {
 
 			case "LOBBY":

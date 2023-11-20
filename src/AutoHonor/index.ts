@@ -22,16 +22,16 @@ new class extends MTZPlugin {
 		this.addCSS("https://cdn.mashtoolz.xyz/lolclient/css/sweetalert2.css")
 		this.addCSS("https://cdn.mashtoolz.xyz/lolclient/css/AutoHonor.css")
 	}
+
 	override onScreen(screen: GameScreen) {
-	override onScreen(screen: string) {
 		switch (screen) {
 			case "PARTIES": {
-				waitUntil(() => select(this.options.parent), 2000)
+				waitUntil(() => select(this.options.parent))
 					.then(() => {
 						if (!select(`#${this.options.name}`))
 							new Toggle(this.options)
 					})
-					.catch((err) => console.error(err))
+					.catch((err) => this.Logger.error(err))
 				break
 			}
 		}
