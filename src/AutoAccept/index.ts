@@ -1,6 +1,6 @@
 import { MTZPlugin } from "@Classes"
 import { Toggle, ToggleOptions } from "@Helpers"
-import { select, subscribe, unsubscribe, waitUntil, sleep } from "@Utils"
+import { select, subscribe, unsubscribe, waitUntil, sleep, FetchJSON } from "@Utils"
 
 new class extends MTZPlugin {
 
@@ -30,7 +30,7 @@ new class extends MTZPlugin {
 		this.addCSS("https://cdn.mashtoolz.xyz/lolclient/css/AutoAccept.css")
 	}
 
-	override onScreen(screen: string) {
+	override onScreen(screen: GameScreen) {
 		switch (screen) {
 			case "PARTIES": {
 				waitUntil(() => select(this.options.parent), 2000)

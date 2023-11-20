@@ -1,5 +1,6 @@
 import { MTZ, MTZPlugin } from "@Classes"
 import { Toggle, ToggleOptions } from "@Helpers"
+import { GameFlowPhase, GameScreen } from "@Types"
 import { FetchJSON, select, waitUntil } from "@Utils"
 
 new class extends MTZPlugin {
@@ -21,7 +22,7 @@ new class extends MTZPlugin {
 		this.addCSS("https://cdn.mashtoolz.xyz/lolclient/css/sweetalert2.css")
 		this.addCSS("https://cdn.mashtoolz.xyz/lolclient/css/AutoHonor.css")
 	}
-
+	override onScreen(screen: GameScreen) {
 	override onScreen(screen: string) {
 		switch (screen) {
 			case "PARTIES": {
@@ -36,7 +37,7 @@ new class extends MTZPlugin {
 		}
 	}
 
-	override onPhase(phase: string, _lastPhase: string): void {
+	override onPhase(phase: GameFlowPhase): void {
 		switch (phase) {
 			case "PREENDOFGAME": {
 				if (!(DataStore.get(`MTZ.${this.name}`) || false)) return
