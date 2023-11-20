@@ -1,17 +1,34 @@
+declare global {
+	interface Promise<T> {
+		cancelled: boolean
+		cancel: () => void
+	}
+}
+
+Promise.prototype.cancelled = false
+Promise.prototype.cancel = function () {
+	this.cancelled = true
+}
+
 /**
- * Waits until a condition is met or a timeout is reached.
- * @param condition The condition to check.
- * @param timeout The maximum amount of time to wait for the condition to be met, in milliseconds.
- * @param callback The function to call when the condition is met
- * @returns A Promise that resolves when the condition is met or rejects when the timeout is reached.
+ * Waits until a condition is met or a timeout occurs.
+ * @param condition - The condition to check.
+ * @param timeout - The maximum time to wait in milliseconds.
+ * @param callback - An optional callback function to be called with the condition result.
+ * @returns An object with a promise that resolves when the condition is met or rejects when a timeout occurs,
+ * and a cancel function to cancel the waiting.
  */
-export function waitUntil(condition: (() => any), timeout = Infinity, callback: ((conditionResult: any) => {}) | null = null): Promise<any> {
+export function waitUntil(condition: (() => any), timeout: number = Infinity, callback: ((conditionResult: any) => {}) | null = null) {
 
-	return new Promise((resolve, reject) => {
-
+	const promise = new Promise<any>((resolve, reject) => {
 		let startTime = performance.now()
 
 		const checkCondition = () => {
+
+			if (promise.cancelled) {
+				reject("Cancelled")
+				return
+			}
 
 			if (condition()) {
 				if (callback) resolve(callback(condition()))
@@ -23,7 +40,7 @@ export function waitUntil(condition: (() => any), timeout = Infinity, callback: 
 			const elapsedTime = currentTime - startTime
 
 			if (elapsedTime >= timeout) {
-				reject()
+				reject("Timeout")
 				return
 			}
 
@@ -32,4 +49,6 @@ export function waitUntil(condition: (() => any), timeout = Infinity, callback: 
 
 		requestAnimationFrame(checkCondition)
 	})
+
+	return promise
 }
