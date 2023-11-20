@@ -5,7 +5,7 @@ import { select, subscribe, unsubscribe, waitUntil, sleep } from "@Utils"
 new class extends MTZPlugin {
 
 	private AutoAccepting = false
-	private playerResponse = null
+	private playerResponse: PlayerResponse = null
 	private options!: ToggleOptions
 
 	constructor() {
@@ -20,7 +20,7 @@ new class extends MTZPlugin {
 			className: "auto-accept",
 			tooltip: "Automatically accept Queue Popups",
 			onEnable: () => {
-				subscribe("/lol-matchmaking/v1/ready-check", "ReadyCheck", this.onPlayerReponse)
+				subscribe("/lol-matchmaking/v1/ready-check", "ReadyCheck", this.onPlayerReponse.bind(this))
 			},
 			onDisable: () => {
 				unsubscribe("/lol-matchmaking/v1/ready-check", "ReadyCheck")
@@ -50,6 +50,7 @@ new class extends MTZPlugin {
 			case "LOBBY":
 			case "MATCHMAKING": {
 				this.playerResponse = null
+				this.AutoAccepting = false
 				break
 			}
 
@@ -57,8 +58,8 @@ new class extends MTZPlugin {
 				if (DataStore.get(`MTZ.${this.name}`) && !this.AutoAccepting) {
 					this.AutoAccepting = true
 					sleep(3000).then(() => {
-						if (this.playerResponse !== "None")
-							select(".ready-check-button-accept")!.click()
+						if (this.playerResponse === "None" || this.playerResponse === null)
+							FetchJSON("/lol-matchmaking/v1/ready-check/accept", { method: "POST" })
 						this.AutoAccepting = false
 					})
 				}
