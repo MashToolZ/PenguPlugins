@@ -1,6 +1,6 @@
 import { MTZPlugin, Logger } from "@Classes"
 import { select, subscribe, waitUntil } from "@Utils"
-import { AudioChannel, MTZEvent } from "@Types"
+import { AudioChannel, GameFlowPhase, GameScreen, MTZEvent } from "@Types"
 import { ContextMenu } from "@Helpers"
 
 declare global {
@@ -25,7 +25,7 @@ class MTZ {
 	public Logger: Logger = new Logger(`%c MTZ `, "background: #171717; color: #ff4800; font-weight: bold")
 
 	private plugins: MTZPlugin[] = []
-	private phase: string | null = null
+	private phase: GameFlowPhase | null = null
 	private contextMenu = new ContextMenu()
 	#Toast!: ToastFunction
 
@@ -34,7 +34,7 @@ class MTZ {
 	#data = {
 		lastScreen: null,
 		lastPhase: null
-	} as { lastScreen: string | null, lastPhase: string | null }
+	} as { lastScreen: GameScreen | null, lastPhase: GameFlowPhase | null }
 
 	/**
 	 * Initializes the `MTZ` instance
@@ -167,14 +167,20 @@ class MTZ {
 
 	/**
 	 * Returns the current screen in the format of `MAIN/SUB` if both are available, otherwise just `MAIN`
-	 * @returns {string}
 	 */
-	private get screen(): string {
+	private get screen(): GameScreen {
 		if (!document.body || document.querySelector(".lol-loading-screen-container"))
 			return "LOADING"
 
 		const element = document.querySelector(`.main-navigation-menu-item[active]`) as HTMLElement
-		const mainScreen = element ? element.offsetParent ? element.classList[1].split("_")[3].toUpperCase() : null : document.querySelector("section.rcp-fe-viewport-main > div.screen-root")?.getAttribute("data-screen-name")?.split("rcp-fe-lol-")[1]?.toUpperCase() ?? null
+		let mainScreen = (element ? element.offsetParent ? element.classList[1].split("_")[3].toUpperCase() : null : document.querySelector("section.rcp-fe-viewport-main > div.screen-root")?.getAttribute("data-screen-name")?.split("rcp-fe-lol-")[1]?.toUpperCase() ?? null) as GameScreen
+
+		switch (mainScreen) {
+			case "PARTIES":
+				if (document.querySelector(".parties-background")?.classList.contains("is-showing-game-select"))
+					mainScreen = "GAME_SELECTION"
+				break
+		}
 
 		return mainScreen ?? "UNKNOWN"
 	}
@@ -239,6 +245,7 @@ class MTZ {
 	 * @param screen - The current screen.
 	 * @param lastScreen - The last screen.
 	 */
+	#onScreen(screen: GameScreen, lastScreen: GameScreen) {
 		this.Logger.info([`%cScreen: ${screen}`, "color: #ac4"])
 		this.plugins.forEach(plugin => plugin.initialized && plugin.onScreen && plugin.onScreen(screen, lastScreen))
 	}
@@ -248,6 +255,7 @@ class MTZ {
 	 * @param phase - The current phase.
 	 * @param lastPhase - The previous phase.
 	 */
+	#onPhase(phase: GameFlowPhase, lastPhase: GameFlowPhase) {
 		this.Logger.info([`%cPhase: ${phase}`, "color: #ca4"])
 		this.plugins.forEach(plugin => plugin.initialized && plugin.onPhase && plugin.onPhase(phase, lastPhase))
 	}
@@ -281,5 +289,5 @@ class MTZ {
 	}
 }
 
-const instance = window.MTZ || new MTZ(false)
+const instance = window.MTZ || new MTZ()
 export { instance as MTZ }

@@ -84,7 +84,7 @@ export class MTZPlugin {
 	 * @param lastScreen - The previous screen.
 	 */
 	// @ts-ignore
-	onScreen(screen: string, lastScreen: string) { }
+	onScreen(screen: GameScreen, lastScreen: GameScreen) { }
 
 	/**
 	 * Called when the phase changes.
@@ -92,7 +92,7 @@ export class MTZPlugin {
 	 * @param lastPhase - The previous phase.
 	 */
 	// @ts-ignore
-	onPhase(phase: string, lastPhase: string) { }
+	onPhase(phase: GameFlowPhase, lastPhase: GameFlowPhase) { }
 
 	/**
 	 * Handles the context menu event.
