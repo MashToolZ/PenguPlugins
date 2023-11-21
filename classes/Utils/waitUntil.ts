@@ -1,10 +1,3 @@
-declare global {
-	interface Promise<T> {
-		cancelled: boolean
-		cancel: () => void
-	}
-}
-
 Promise.prototype.cancelled = false
 Promise.prototype.cancel = function () {
 	this.cancelled = true

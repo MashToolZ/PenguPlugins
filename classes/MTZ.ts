@@ -8,6 +8,11 @@ declare global {
 		MTZ: MTZ
 		Sweetalert2: any
 	}
+
+	interface Promise<T> {
+		cancelled: boolean
+		cancel: () => void
+	}
 }
 
 interface ToastFunction {
