@@ -43,7 +43,6 @@ class MTZ {
 	#Toast!: ToastFunction
 
 	#events: { [key: string]: MTZEvent[] } = {}
-	audio: any = null
 	#data = {
 		lastScreen: null,
 		lastPhase: null
@@ -56,7 +55,11 @@ class MTZ {
 
 		window.MTZ = this
 
-		rcp.postInit("rcp-fe-audio", (api) => this.audio = api.channels)
+		for (const key in this.API)
+			rcp.postInit(key, api => {
+				const typeKey = key as keyof typeof this.API
+				typeof this.API[typeKey] === "function" ? this.API[typeKey](api) : this.API[typeKey] = api
+			})
 
 		//@ts-ignore
 		import("https://cdn.mashtoolz.xyz/lolclient/js/sweetalert2.js").then(() => {
@@ -243,8 +246,8 @@ class MTZ {
 	 * @param channel - The audio channel to play the sound on.
 	 */
 	playSound(sound: string, channel: AudioChannel) {
-		if (!this.audio) return
-		this.audio?.get(channel).playSound(sound)
+		if (!this.API["rcp-fe-audio"]) return
+		this.API["rcp-fe-audio"]?.channels?.get(channel).playSound(sound)
 	}
 
 	/**
