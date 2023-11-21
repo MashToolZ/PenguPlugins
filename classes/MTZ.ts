@@ -27,7 +27,15 @@ interface ToastFunction {
  */
 class MTZ {
 
-	public Logger: Logger = new Logger(`%c MTZ `, "background: #171717; color: #ff4800; font-weight: bold")
+	public Logger = new Logger(`%c MTZ `, "background: #171717; color: #ff4800; font-weight: bold")
+	public Settings = new Settings()
+
+	public API = {
+		"rcp-fe-audio": null as any,
+		"rcp-fe-ember-libs": (api: any) => this.#hookEmber(api),
+		"rcp-fe-lol-l10n": (api: any) => this.Settings.translate(api),
+		"rcp-fe-lol-settings": (api: any) => this.Settings.init(api)
+	}
 
 	private plugins: MTZPlugin[] = []
 	private phase: GameFlowPhase | null = null
@@ -137,6 +145,45 @@ class MTZ {
 	 */
 	Toast(options: Object) {
 		this.#Toast.fire(options)
+	}
+
+	/**
+	 * Hooks into the Ember framework
+	 * @param api - The API object used to interact with Ember.
+	 */
+	async #hookEmber(api: any) {
+
+		const Ember = await api.getEmber()
+		const { Settings } = this
+
+		const extend = Ember.Router.extend
+
+		Ember.Router.extend = function () {
+			const result = extend.apply(this, arguments)
+
+			result.map(function (this: any) {
+				for (const route of Settings.routes)
+					this.route(route)
+			})
+
+			return result
+		}
+
+		const factory = await api.getEmberApplicationFactory()
+
+		const _builder = factory.factoryDefinitionBuilder
+		factory.factoryDefinitionBuilder = function () {
+			const builder = _builder.apply(this, arguments)
+
+			const build = builder.build
+			builder.build = function () {
+				const name = this.getName()
+				if (name == "rcp-fe-lol-settings")
+					Settings.build(this, Ember)
+				return build.apply(this, arguments)
+			}
+			return builder
+		}
 	}
 
 	/**

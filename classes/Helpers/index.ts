@@ -1,4 +1,5 @@
 export * from "./Logger"
 export * from "./ContextMenu"
+export * from "./Settings"
 export * from "./Toggle"
 export * from "./Tooltip"
