@@ -1,7 +1,7 @@
-import { MTZPlugin, Logger } from "@Classes"
+import { MTZPlugin } from "@Classes"
 import { select, subscribe, waitUntil } from "@Utils"
 import { AudioChannel, GameFlowPhase, GameScreen, MTZEvent } from "@Types"
-import { ContextMenu } from "@Helpers"
+import { Logger, ContextMenu, Settings } from "@Helpers"
 
 declare global {
 	interface Window {

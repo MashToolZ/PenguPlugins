@@ -1,5 +1,6 @@
-import { MTZ, Logger } from "@Classes"
+import { MTZ } from "@Classes"
 import { addCSS } from "@Utils"
+import { Logger } from "@Helpers"
 import type { ContextMenu } from "@Helpers"
 import { GameFlowPhase, GameScreen } from "@Types"
 
