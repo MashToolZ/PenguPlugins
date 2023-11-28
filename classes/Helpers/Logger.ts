@@ -1,6 +1,6 @@
 export class Logger {
 
-	enabled = true
+	enabled = false
 
 	constructor(private readonly prefix: string, private readonly style: string) { }
 
