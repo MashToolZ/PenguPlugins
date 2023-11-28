@@ -1,8 +1,8 @@
 export class Tooltip {
 
 	public timeout!: NodeJS.Timeout
-	public readonly tooltip: HTMLElement
-	public readonly tooltipInner: HTMLElement
+	public readonly tooltip!: HTMLElement
+	public readonly tooltipInner!: HTMLElement
 
 	constructor(
 		public readonly type: "system" | "top",
@@ -45,7 +45,6 @@ export class Tooltip {
 
 		this.element.addEventListener("mouseleave", () => {
 			clearTimeout(this.timeout)
-			if (!this.exists()) return
 			this.fade(false, true)
 		})
 	}
@@ -68,7 +67,7 @@ export class Tooltip {
 
 				if (opacity <= 0 || opacity >= 1) {
 					clearInterval(timer)
-					if (deleteAfter) this.tooltip.remove()
+					if (deleteAfter) this.tooltip?.remove()
 					resolve()
 				}
 			}, this.ms * gap)

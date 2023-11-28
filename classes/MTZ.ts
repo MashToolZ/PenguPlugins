@@ -15,12 +15,6 @@ declare global {
 	}
 }
 
-interface ToastFunction {
-	(options: Object): void
-	fire(options: Object): void
-	mixin(options: Object): void
-}
-
 /**
  * The MTZ class is the main class for the PenguPlugins library.
  * It provides functionality for interacting with the League of Legends client and plugins.
@@ -40,7 +34,6 @@ class MTZ {
 	private plugins: MTZPlugin[] = []
 	private phase: GameFlowPhase | null = null
 	private contextMenu = new ContextMenu()
-	#Toast!: ToastFunction
 
 	#events: { [key: string]: MTZEvent[] } = {}
 	#data = {
@@ -60,18 +53,6 @@ class MTZ {
 				const typeKey = key as keyof typeof this.API
 				typeof this.API[typeKey] === "function" ? this.API[typeKey](api) : this.API[typeKey] = api
 			})
-
-		//@ts-ignore
-		import("https://cdn.mashtoolz.xyz/lolclient/js/sweetalert2.js").then(() => {
-			this.#Toast = window.Sweetalert2.mixin({
-				toast: true,
-				position: "top",
-				showConfirmButton: false,
-				timer: 2000,
-				timerProgressBar: true,
-				showCloseButton: true
-			})
-		})
 
 		waitUntil(() => this.isReady()).then(() => {
 
@@ -143,14 +124,6 @@ class MTZ {
 	}
 
 	/**
-	 * Displays a toast notification using Sweetalert2.
-	 * @param options - The options for the toast notification.
-	 */
-	Toast(options: Object) {
-		this.#Toast.fire(options)
-	}
-
-	/**
 	 * Hooks into the Ember framework
 	 * @param api - The API object used to interact with Ember.
 	 */
@@ -160,15 +133,12 @@ class MTZ {
 		const { Settings } = this
 
 		const extend = Ember.Router.extend
-
 		Ember.Router.extend = function () {
 			const result = extend.apply(this, arguments)
-
 			result.map(function (this: any) {
 				for (const route of Settings.routes)
 					this.route(route)
 			})
-
 			return result
 		}
 
