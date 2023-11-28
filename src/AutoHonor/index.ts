@@ -61,7 +61,7 @@ new class extends MTZPlugin {
 							const players = partyPuuids.length > 0 ? eligiblePlayers.filter((e: { puuid: string }) => partyPuuids.includes(e.puuid)) : eligiblePlayers
 							const { puuid, summonerId, summonerName } = players[Math.random() * players.length | 0]
 
-							MTZ.Toast({
+							window.Toast.success({
 								icon: "success",
 								title: `Honored ${summonerName}`
 							})

@@ -11,8 +11,8 @@ export class Settings {
 	])
 
 	constructor() {
-		this.#addGroup("MTZ", "MTZ_Title", "MTZ_Title_Capital")
-			.addCategory("General")
+		// this.#addGroup("MTZ", "MTZ_Title", "MTZ_Title_Capital")
+		// 	.addCategory("General")
 	}
 
 	#addGroup(name: string, titleKey: string, capitalTitleKey: string) {
@@ -30,18 +30,29 @@ export class Settings {
 	}
 
 	init(api: any) {
-		for (const group of this.groups) {
-			api._modalManager._registeredCategoryGroups.splice(1, 0, group)
-			api._modalManager._refreshCategoryGroups()
-		}
+		// for (const group of this.groups) {
+		// 	api._modalManager._registeredCategoryGroups.splice(1, 0, group)
+		// 	api._modalManager._refreshCategoryGroups()
+		// }
 	}
 
 	build(builder: any, Ember: any) {
 		// TODO: figure out what the fuck Riot smoked
-
 		// builder.addRoute("MTZ-General", Ember.Route.extend())
 		// builder.addController("MTZ-General", Ember.Controller.extend())
-		// builder.addTemplate("MTZ-General", Ember.HTMLBars.template())
+
+		builder.addTemplate("MTZ-General", Ember.HTMLBars.template({
+			id: "MTZ-General",
+			block: JSON.stringify({
+				"statements": [],
+				"locals": [],
+				"named": [],
+				"yields": [],
+				"blocks": [],
+				"hasPartials": false
+			}),
+			meta: {}
+		}))
 	}
 
 	translate(api: any) {
