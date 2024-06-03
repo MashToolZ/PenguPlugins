@@ -51,6 +51,6 @@ jobs:
           for pluginName in "${plugins[@]}"; do
             echo "Publishing $pluginName..."
             cd "dist/$pluginName"
-            pnpm publish --access private
+            pnpm publish --no-git-checks --access private
             cd ../../
           done
