@@ -9,7 +9,7 @@ new class extends MTZPlugin {
 
 	override onScreen(screen: GameScreen): void {
 		switch (screen) {
-			case "PROFILE": {
+			case "PROFILES-MAIN": {
 				const owned = Symbol("owned")
 				Reflect.defineProperty(Object.prototype, "owned", {
 					configurable: true,

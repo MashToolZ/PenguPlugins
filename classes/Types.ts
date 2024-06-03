@@ -47,4 +47,4 @@ export type GameFlowPhase = "LOBBY" | "MATCHMAKING" | "READYCHECK" | "CHAMPSELEC
 /**
  * Represents the different Screens
  */
-export type GameScreen = "UNKNOWN" | "LOADING" | "HOME-MAIN" | "TFT" | "HOME" | "EVENT" | "COMPETITIVE" | "PROFILE" | "COLLECTION" | "LOOT" | "STORE" | "GAME_SELECTION" | "PARTIES"
+export type GameScreen = "UNKNOWN" | "LOADING" | "HOME-MAIN" | "TFT" | "HOME" | "EVENT" | "COMPETITIVE" | "PROFILES-MAIN" | "COLLECTION" | "LOOT" | "STORE" | "GAME_SELECTION" | "PARTIES"
