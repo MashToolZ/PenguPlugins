@@ -1,4 +1,4 @@
-import { MTZ, MTZPlugin } from "@Classes"
+import { MTZPlugin } from "@Classes"
 import { Toggle, ToggleOptions } from "@Helpers"
 import { GameFlowPhase, GameScreen } from "@Types"
 import { FetchJSON, select, waitUntil } from "@Utils"
@@ -19,7 +19,6 @@ new class extends MTZPlugin {
 			tooltip: "Automatically honor a random teammate"
 		}
 
-		this.addCSS("https://cdn.mashtoolz.xyz/lolclient/css/sweetalert2.css")
 		this.addCSS("https://cdn.mashtoolz.xyz/lolclient/css/AutoHonor.css")
 	}
 
@@ -61,10 +60,7 @@ new class extends MTZPlugin {
 							const players = partyPuuids.length > 0 ? eligiblePlayers.filter((e: { puuid: string }) => partyPuuids.includes(e.puuid)) : eligiblePlayers
 							const { puuid, summonerId, summonerName } = players[Math.random() * players.length | 0]
 
-							window.Toast.success({
-								icon: "success",
-								title: `Honored ${summonerName}`
-							})
+							window.Toast.success(`Honored ${summonerName}`)
 
 							FetchJSON("/lol-honor-v2/v1/honor-player", {
 								method: "POST",
