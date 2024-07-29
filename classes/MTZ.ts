@@ -198,7 +198,7 @@ class MTZ {
 			return "LOADING"
 
 		const element = document.querySelector(`.main-navigation-menu-item[active]`) as HTMLElement
-		let mainScreen = (element ? element.offsetParent ? element.classList[1].split("_")[3].toUpperCase() : null : document.querySelector("section.rcp-fe-viewport-main > div.screen-root")?.getAttribute("data-screen-name")?.split("rcp-fe-lol-")[1]?.toUpperCase() ?? null) as GameScreen
+		let mainScreen = (element ? element.offsetParent ? element.classList[1]?.split("_")[3]?.toUpperCase() : null : document.querySelector("section.rcp-fe-viewport-main > div.screen-root")?.getAttribute("data-screen-name")?.split("rcp-fe-lol-")[1]?.toUpperCase() ?? null) as GameScreen
 
 		switch (mainScreen) {
 			case "PARTIES":
